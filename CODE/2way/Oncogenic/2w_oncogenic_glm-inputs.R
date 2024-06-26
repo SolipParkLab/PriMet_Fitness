@@ -103,9 +103,9 @@ if (!file.exists('./DATA/MODEL_INPUTS/2way__OG')){
 }
 setwd('./DATA/MODEL_INPUTS/2way__OG')
 # Saving
-saveRDS(model_inputs,sprintf("2w__OG__inputs_%s_%s.RDS",FREQ,SPLITMOD))
+saveRDS(model_inputs,sprintf("2w__OG__glm-inputs_%s_%s.RDS",FREQ,SPLITMOD))
 write.table(model_inputs_df,
-            sprintf("2w__OG__inputs_%s_%s.tsv",FREQ,SPLITMOD),
+            sprintf("2w__OG__glm-inputs_%s_%s.tsv",FREQ,SPLITMOD),
             sep="\t",
             quote=FALSE,
             row.names = FALSE)
