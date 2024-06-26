@@ -94,7 +94,8 @@ freqs_list <- lapply(ready_bm,function(mat){
 })
 freqs_df <- map_df(freqs_list,~as.data.frame(.x),.id="Tissue")
 freqs_df[c("Tissue","Subtype","Stage")] <- str_split_fixed(freqs_df$Tissue,"\\.",3)
-confounding_factors_df <- merge(clinical_data[c("SAMPLE_ID","STAGE_PM","TUMOR_PURITY","SAMPLE_COVERAGE","AGE_AT_SEQUENCING")],
+confounding_factors_df <- merge(clinical_data[c("SAMPLE_ID", 'CANC_TYPE', "STAGE_PM", 'CANC_SUBTYPE', 'STAGE_PWOWM',
+                                                "TUMOR_PURITY","SAMPLE_COVERAGE","AGE_AT_SEQUENCING")],
                                 freqs_df[c("Tissue","MutFreq","LossFreq","GainFreq")],
                                 by.y="row.names", by.x="SAMPLE_ID", all.y=T)
 confounding_factors_df <- merge(confounding_factors_df,
@@ -120,13 +121,13 @@ a <- lapply(c('TUMOR_PURITY', 'SAMPLE_COVERAGE', 'AGE_AT_SEQUENCING', 'Clonal_Fr
     na.omit() %>%
     group_by(Tissue) %>% 
     slice_head(prop = 0.5) %>% 
-    mutate(TEMP = 2)
+    mutate(TEMP = 'HIGH')
   # Bottom 50%
   bot <- sorted %>%
     na.omit() %>%
     group_by(Tissue) %>% 
     slice_tail(prop = 0.5) %>% 
-    mutate(TEMP = 1)
+    mutate(TEMP = 'LOW')
   # Merging
   top_n_bot <- rbind(top, bot)
   names(top_n_bot)[names(top_n_bot) == 'TEMP'] <- column
