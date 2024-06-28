@@ -29,7 +29,7 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 ### ... Uploading files ----
-model_inputs <- readRDS(sprintf("./DATA/MODEL_INPUTS/2way__OG/2w__OG__glm-inputs_%s_%s.RDS",FREQ,SPLITMOD))
+model_inputs <- readRDS(sprintf("./DATA/GLM_INPUTS/2way__OG/2w__OG__glm-inputs_%s_%s.RDS",FREQ,SPLITMOD))
 
 
 
@@ -74,13 +74,13 @@ colnames(mod_res)[which(colnames(mod_res)=="value")] <- "NTT_Subtype-Stage"
 
 
 ### ... Storing files ----
-if (!file.exists('./DATA/MODEL_OUTPUTS/')){
-  dir.create('./DATA/MODEL_OUTPUTS/')
+if (!file.exists('./DATA/GLM_OUTPUTS/')){
+  dir.create('./DATA/GLM_OUTPUTS/')
 }
-if (!file.exists('./DATA/MODEL_OUTPUTS/2way__OG')){
-  dir.create('./DATA/MODEL_OUTPUTS/2way__OG')
+if (!file.exists('./DATA/GLM_OUTPUTS/2way__OG')){
+  dir.create('./DATA/GLM_OUTPUTS/2way__OG')
 }
-setwd('./DATA/MODEL_OUTPUTS/2way__OG')
+setwd('./DATA/GLM_OUTPUTS/2way__OG')
 # Saving
 saveRDS(mod_res,sprintf("2w__OG__glm-outputs_%s_%s.RDS",FREQ,SPLITMOD))
 write.table(mod_res, sprintf("2w__OG__glm-outputs_%s_%s.tsv",FREQ,SPLITMOD),

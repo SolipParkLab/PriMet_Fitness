@@ -125,13 +125,13 @@ model_inputs_df[c("Tissue","Stage","AGGGROUP")] <- str_split_fixed(model_inputs_
 
 
 ### ... Saving files ----
-if (!file.exists('./DATA/MODEL_INPUTS/')){
-  dir.create('./DATA/MODEL_INPUTS/')
+if (!file.exists('./DATA/GLM_INPUTS/')){
+  dir.create('./DATA/GLM_INPUTS/')
 }
-if (!file.exists('./DATA/MODEL_INPUTS/2way__AGG')){
-  dir.create('./DATA/MODEL_INPUTS/2way__AGG')
+if (!file.exists('./DATA/GLM_INPUTS/2way__AGG')){
+  dir.create('./DATA/GLM_INPUTS/2way__AGG')
 }
-setwd('./DATA/MODEL_INPUTS/2way__AGG')
+setwd('./DATA/GLM_INPUTS/2way__AGG')
 saveRDS(model_inputs, sprintf('./2w__AGG__inputs_%s_%s.RDS', FREQ, SPLITMOD))
 write.table(model_inputs_df, sprintf('./2w__AGG__inputs_%s_%s.tsv', FREQ, SPLITMOD),
             sep="\t", quote=FALSE, row.names = FALSE)

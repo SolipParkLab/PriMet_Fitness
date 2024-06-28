@@ -95,13 +95,13 @@ model_inputs_df <- merge(model_inputs_df,cancgenedf)
 
 
 ### ... Storing files ----
-if (!file.exists('./DATA/MODEL_INPUTS/')){
-  dir.create('./DATA/MODEL_INPUTS/')
+if (!file.exists('./DATA/GLM_INPUTS/')){
+  dir.create('./DATA/GLM_INPUTS/')
 }
-if (!file.exists('./DATA/MODEL_INPUTS/2way__OG')){
-  dir.create('./DATA/MODEL_INPUTS/2way__OG')
+if (!file.exists('./DATA/GLM_INPUTS/2way__OG')){
+  dir.create('./DATA/GLM_INPUTS/2way__OG')
 }
-setwd('./DATA/MODEL_INPUTS/2way__OG')
+setwd('./DATA/GLM_INPUTS/2way__OG')
 # Saving
 saveRDS(model_inputs,sprintf("2w__OG__glm-inputs_%s_%s.RDS",FREQ,SPLITMOD))
 write.table(model_inputs_df,

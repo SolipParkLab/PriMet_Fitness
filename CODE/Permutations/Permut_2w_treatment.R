@@ -1,6 +1,3 @@
-setwd("/home/adrian/PROJECTS/002.High_Order_Interactions/Git_Hub/")
-
-
 
 ### ... PERMUTATION SCRIPT TO ASSESS SIGNIFICANCE OF INTERACTIONS ----
 library(vegan)
@@ -353,17 +350,11 @@ write.table(count_real_significants,
             sprintf("./DATA/ANALYSIS_DATA/2way__T/2wT_permutation_summarised-real-counts_%s_%s.tsv",FREQ,SPLITMOD,FREQ,SPLITMOD),
             sep="\t", quote=F, row.names=F)
 
-
 significant_tables_counts <- significant_tables_counts %>%
   group_by(P_cut, CNA_type, Stage, Treatment, Permutation) %>%
-  summarise(Permut_Sigs=sum(Permut_Sigs))
-
-count_real_significants <- count_real_significants %>%
-  group_by(P_cut ,CNA_type, Stage, Treatment) %>%
-  summarise(Real_Sigs=sum(Real_Sigs))
+  summarise(Permut_Sigs=sum(Permut_Sigs, na.rm=T))
 
 by_vect <- c("P_cut","CNA_type","Stage","Treatment")
-
 permuted_significants_total <- merge(significant_tables_counts,
                                      count_real_significants,
                                      by = by_vect)
@@ -390,5 +381,5 @@ permuted_significants_total <- read.delim(sprintf("./DATA/ANALYSIS_DATA/2way__T/
 ### ... Comparing number of significants of BH-FDR vs Perm-FDR
 FDR_conversion_table <- unique(permuted_significants_total[c("CNA_type","Stage","Treatment","P_cut","Mean_FDR")])
 write.table(FDR_conversion_table,
-            sprintf("./DATA/ANALYSIS_DATA/2way__T/2wT_bindrows-FDR-conversion-table_%s_%s.tsv", FREQ, SPLITMOD),
+            sprintf("./DATA/ANALYSIS_DATA/2way__T/2wT_FDR-conversion-table_%s_%s.tsv", FREQ, SPLITMOD),
             sep="\t", quote=F, row.names=F)

@@ -35,7 +35,7 @@ source("./CODE/common_reg-model-functions.R",local=T)
 sig_genes_2way <- read.csv(sprintf("./DATA/ANALYSIS_DATA/2way__OG/2wOG_%s_analysis_%s_%s.tsv", 'PERM', FREQ, SPLITMOD),
                            sep="\t", header=T)
 sig_genes_2way <- filter(sig_genes_2way,get(paste0("SIG_FDR", FDR_2way))==T)
-inputs_twogenes <- readRDS(sprintf('./DATA/MODEL_INPUTS/3way__TG/3w__TG__inputs_%s_%s.RDS', FREQ, SPLITMOD))
+inputs_twogenes <- readRDS(sprintf('./DATA/GLM_INPUTS/3way__TG/3w__TG__glm-inputs_%s_%s.RDS', FREQ, SPLITMOD))
 
 
 
@@ -98,11 +98,11 @@ twogenes_outputs <- merge(twogenes_outputs,results_2way_all)
 
 
 ### ... Saving files ----
-if (!file.exists('./DATA/MODEL_OUTPUTS/')){
-  dir.create('./DATA/MODEL_OUTPUTS/')
+if (!file.exists('./DATA/GLM_OUTPUTS/')){
+  dir.create('./DATA/GLM_OUTPUTS/')
 }
-if (!file.exists('./DATA/MODEL_OUTPUTS/3way__TG')){
-  dir.create('./DATA/MODEL_OUTPUTS/3way__TG')
+if (!file.exists('./DATA/GLM_OUTPUTS/3way__TG')){
+  dir.create('./DATA/GLM_OUTPUTS/3way__TG')
 }
-setwd('./DATA/MODEL_OUTPUTS/3way__TG')
-saveRDS(twogenes_outputs, sprintf('./3w__TG__outputs_%s_%s.RDS', FREQ, SPLITMOD))
+setwd('./DATA/GLM_OUTPUTS/3way__TG')
+saveRDS(twogenes_outputs, sprintf('./3w__TG__glm-outputs_%s_%s.RDS', FREQ, SPLITMOD))

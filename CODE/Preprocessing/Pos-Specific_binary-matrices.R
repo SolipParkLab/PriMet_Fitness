@@ -1,7 +1,3 @@
-### ... Setting working environment ---- 
-setwd('/home/adrian/PROJECTS/002.High_Order_Interactions/Git_Hub/')
-
-
 
 ### ... Loading libraries ----
 library(dplyr)

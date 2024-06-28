@@ -20,7 +20,7 @@ FREQ <- 'mf1-cf10'
 
 
 ### ... Loading input files ----
-twogenes_results <- readRDS(sprintf('./DATA/MODEL_OUTPUTS/3way__TG/3w__TG__outputs_%s_%s.RDS', FREQ, SPLITMOD))
+twogenes_results <- readRDS(sprintf('./DATA/GLM_OUTPUTS/3way__TG/3w__TG__glm-outputs_%s_%s.RDS', FREQ, SPLITMOD))
 FDR_bytiss <- readRDS(sprintf('./DATA/ANALYSIS_DATA/3way__TG/3wTG_FDR-conversion-table_%s_%s.RDS', FREQ, SPLITMOD))
 
 
@@ -29,7 +29,6 @@ FDR_bytiss <- readRDS(sprintf('./DATA/ANALYSIS_DATA/3way__TG/3wTG_FDR-conversion
 twogenes_results$P_cut <- ifelse(twogenes_results$P_value < .2,
                                  round_any(twogenes_results$P_value, accuracy = 0.000001, f = ceiling),
                                  round_any(twogenes_results$P_value, accuracy = 0.001, f = ceiling))
-# Adjusting by tissue
 twogenes_results <- merge(twogenes_results,
                           FDR_bytiss,
                           by = c('Tissue', 'Stage', 'CNA_type', 'P_cut'))

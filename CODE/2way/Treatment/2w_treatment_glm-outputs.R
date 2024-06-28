@@ -28,7 +28,7 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 ## Uploading files ----
-model_inputs <- readRDS(sprintf("./DATA/MODEL_INPUTS/2way__T/2w__T__inputs_%s_%s.RDS",FREQ,SPLITMOD))
+model_inputs <- readRDS(sprintf("./DATA/MODEL_INPUTS/2way__T/2w__T__glm-inputs_%s_%s.RDS",FREQ,SPLITMOD))
 
 
 
@@ -66,16 +66,16 @@ model_results_df$Size <- NULL
 
 
 ### ... Storing files ----
-if (!file.exists('./DATA/MODEL_OUTPUTS/')){
-  dir.create('./DATA/MODEL_OUTPUTS/')
+if (!file.exists('./DATA/GLM_OUTPUTS/')){
+  dir.create('./DATA/GLM_OUTPUTS/')
 }
-if (!file.exists('./DATA/MODEL_OUTPUTS/2way__T')){
-  dir.create('./DATA/MODEL_OUTPUTS/2way__T')
+if (!file.exists('./DATA/GLM_OUTPUTS/2way__T')){
+  dir.create('./DATA/GLM_OUTPUTS/2way__T')
 }
-setwd('./DATA/MODEL_OUTPUTS/2way__T')
-saveRDS(model_results_df,sprintf("2w__T__outputs_%s_%s.RDS",FREQ,SPLITMOD))
+setwd('./DATA/GLM_OUTPUTS/2way__T')
+saveRDS(model_results_df,sprintf("2w__T__glm-outputs_%s_%s.RDS",FREQ,SPLITMOD))
 write.table(model_results_df,
-            sprintf("2w__T__outputs_%s_%s.tsv",FREQ,SPLITMOD),
+            sprintf("2w__T__glm-outputs_%s_%s.tsv",FREQ,SPLITMOD),
             sep="\t",
             quote=FALSE,
             row.names = FALSE)

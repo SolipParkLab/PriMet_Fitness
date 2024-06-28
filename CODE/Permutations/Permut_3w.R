@@ -280,12 +280,6 @@ permuted_twogenes_counts_bytissue <- permuted_twogenes_counts_bytissue %>%
   mutate(Mean_FDR=mean(FDR,na.rm=T),
          St_Err_FDR=plotrix::std.error(FDR,na.rm=T),
          Median_FDR=median(FDR,na.rm=T))
-### ... Adding statistical information BY TISSUE
-# permuted_twogenes_counts_bytissue <- permuted_twogenes_counts_bytissue %>%
-#   group_by(Tissue,CNA_type,Stage,P_cut) %>%
-#   mutate(Mean_FDR_byTiss=mean(FDR,na.rm=T),
-#          St_Err_FDR_byTiss=plotrix::std.error(FDR,na.rm=T),
-#          Median_FDR_byTiss=median(FDR,na.rm=T))
 ### ... Overwriting previous count file with joined infos (permut + real) + FDR
 write.table(permuted_twogenes_counts_bytissue,
             sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM-0s_FDR-table_%s_%s.tsv",FREQ,SPLITMOD,FREQ,SPLITMOD),
@@ -302,21 +296,14 @@ permuted_twogenes_counts_conflictive <- filter(permuted_twogenes_counts,Real_Sig
 permuted_twogenes_counts_ok <- filter(permuted_twogenes_counts,Real_Sig_twog_pairs!=0)
 
 permuted_twogenes_counts_conflictive$FDR <- permuted_twogenes_counts_conflictive$Permut_Sig_twog_pairs/permuted_twogenes_counts_conflictive$Real_Sig_twog_pairs
-permuted_twogenes_counts_conflictive$FDR[is.na(permuted_twogenes_counts_conflictive$FDR)] <- NaN
-permuted_twogenes_counts_conflictive$FDR[is.infinite(permuted_twogenes_counts_conflictive$FDR)] <- NaN
+permuted_twogenes_counts_conflictive$FDR[is.na(permuted_twogenes_counts_conflictive$FDR)] <- 0
+permuted_twogenes_counts_conflictive$FDR[is.infinite(permuted_twogenes_counts_conflictive$FDR)] <- 0
 #  Adding statistical information
 permuted_twogenes_counts_conflictive <- permuted_twogenes_counts_conflictive %>%
   group_by(CNA_type,Stage,P_cut) %>%
   mutate(Mean_FDR=mean(FDR,na.rm=T),
          St_Err_FDR=plotrix::std.error(FDR,na.rm=T),
          Median_FDR=median(FDR,na.rm=T))
-print("calculated mean FDR")
-#  Adding statistical information BY TISSUE
-# permuted_twogenes_counts_bytissue <- permuted_twogenes_counts_bytissue %>%
-#   group_by(Tissue,CNA_type,Stage,P_cut) %>%
-#   mutate(Mean_FDR_byTiss=mean(FDR,na.rm=T),
-#          St_Err_FDR_byTiss=plotrix::std.error(FDR,na.rm=T),
-#          Median_FDR_byTiss=median(FDR,na.rm=T))
 permuted_twogenes_counts <- bind_rows(permuted_twogenes_counts_conflictive,permuted_twogenes_counts_ok)
 write.table(permuted_twogenes_counts,
             sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM-0s_FDR-table_%s_%s.tsv",FREQ,SPLITMOD,FREQ,SPLITMOD),
@@ -324,7 +311,7 @@ write.table(permuted_twogenes_counts,
 
 permuted_twogenes_counts <- unique(permuted_twogenes_counts[c("CNA_type","Stage","P_cut","Mean_FDR","St_Err_FDR")])
 write.table(permuted_twogenes_counts,
-            sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM-0s_conversion-table_%s_%s.tsv",FREQ,SPLITMOD,FREQ,SPLITMOD),
+            sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM-0s_conversion-table_%s_%s.tsv", FREQ, SPLITMOD),
             sep="\t", quote=F, row.names=F)
 
 
@@ -334,8 +321,8 @@ FDR_conversion_table <- read.delim(sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_F
 								   sep="\t", header=T)
 FDR_conversion_table_all <- FDR_conversion_table %>% 
 	group_by(CNA_type,Stage,P_cut) %>%
-	summarise(Mean_FDR=mean(Mean_FDR_byTiss,na.rm=T),
-			  St_Err_FDR=plotrix::std.error(Mean_FDR_byTiss,na.rm=T))
+	summarise(Mean_FDR=mean(Mean_FDR,na.rm=T),
+			  St_Err_FDR=plotrix::std.error(Mean_FDR,na.rm=T))
 write.table(FDR_conversion_table_all,
             sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_FDR-conversion-table_%s_%s.tsv", FREQ, SPLITMOD),
             sep="\t", quote=F, row.names=F)

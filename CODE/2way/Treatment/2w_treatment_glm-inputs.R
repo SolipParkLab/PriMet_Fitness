@@ -86,16 +86,16 @@ model_inputs_df$id <- NULL
 
 
 ### ... Storing files ----
-if (!file.exists('./DATA/MODEL_INPUTS/')){
-  dir.create('./DATA/MODEL_INPUTS/')
+if (!file.exists('./DATA/GLM_INPUTS/')){
+  dir.create('./DATA/GLM_INPUTS/')
 }
-if (!file.exists('./DATA/MODEL_INPUTS/2way__T')){
-  dir.create('./DATA/MODEL_INPUTS/2way__T')
+if (!file.exists('./DATA/GLM_INPUTS/2way__T')){
+  dir.create('./DATA/GLM_INPUTS/2way__T')
 }
-setwd('./DATA/MODEL_INPUTS/2way__T')
-saveRDS(model_inputs,sprintf("2w__T__inputs_%s_%s.RDS",FREQ,SPLITMOD))
+setwd('./DATA/GLM_INPUTS/2way__T')
+saveRDS(model_inputs,sprintf("2w__T__glm-inputs_%s_%s.RDS",FREQ,SPLITMOD))
 write.table(model_inputs_df,
-            sprintf("2w__T__inputs_%s_%s.tsv",FREQ,SPLITMOD),
+            sprintf("2w__T__glm-inputs_%s_%s.tsv",FREQ,SPLITMOD),
             sep = "\t",
             quote = FALSE,
             row.names = FALSE)

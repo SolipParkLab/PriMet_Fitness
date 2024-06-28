@@ -161,12 +161,12 @@ twogenes_subtype_input <- twogenes_subtype_input %>%
 
 
 ### ... Saving files ----
-if (!file.exists('./DATA/MODEL_INPUTS/')){
-  dir.create('./DATA/MODEL_INPUTS/')
+if (!file.exists('./DATA/GLM_INPUTS/')){
+  dir.create('./DATA/GLM_INPUTS/')
 }
-if (!file.exists('./DATA/MODEL_INPUTS/3way__TG')){
-  dir.create('./DATA/MODEL_INPUTS/3way__TG')
+if (!file.exists('./DATA/GLM_INPUTS/3way__TG')){
+  dir.create('./DATA/GLM_INPUTS/3way__TG')
 }
-setwd('./DATA/MODEL_INPUTS/3way__TG')
+setwd('./DATA/GLM_INPUTS/3way__TG')
 saveRDS(subtype_freqs_totest, sprintf('./3w__TG__sig-2w-pairs-to-test_%s_%s.RDS', FREQ, SPLITMOD))
-saveRDS(twogenes_subtype_input, sprintf('./3w__TG__inputs_%s_%s.RDS', FREQ, SPLITMOD))
+saveRDS(twogenes_subtype_input, sprintf('./3w__TG__glm-inputs_%s_%s.RDS', FREQ, SPLITMOD))

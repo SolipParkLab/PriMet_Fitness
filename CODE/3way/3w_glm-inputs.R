@@ -75,13 +75,13 @@ ready_bm <- unlist(mapply(function(binary_matrix,clinical_table){
 
 
 ### ... To save files ----
-if (!file.exists('./DATA/MODEL_INPUTS/')){
-  dir.create('./DATA/MODEL_INPUTS/')
+if (!file.exists('./DATA/GLM_INPUTS/')){
+  dir.create('./DATA/GLM_INPUTS/')
 }
-if (!file.exists('./DATA/MODEL_INPUTS/3way__TG')){
-  dir.create('./DATA/MODEL_INPUTS/3way__TG')
+if (!file.exists('./DATA/GLM_INPUTS/3way__TG')){
+  dir.create('./DATA/GLM_INPUTS/3way__TG')
 }
-setwd('./DATA/MODEL_INPUTS/3way__TG')
+setwd('./DATA/GLM_INPUTS/3way__TG')
 
 
 
@@ -108,4 +108,4 @@ names(input_files) <- inputnames
 
 
 ### ... Saving files ----
-saveRDS(input_files, sprintf('./3w__TG__inputs_%s_%s.RDS', FREQ, SPLITMOD))
+saveRDS(input_files, sprintf('./3w__TG__glm-inputs_%s_%s.RDS', FREQ, SPLITMOD))

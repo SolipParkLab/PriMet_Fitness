@@ -27,7 +27,7 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 ## Uploading files ----
-model_inputs <- readRDS(sprintf('./DATA/MODEL_INPUTS/2way__AGG/2w__AGG__inputs_%s_%s.RDS', FREQ, SPLITMOD))
+model_inputs <- readRDS(sprintf('./DATA/GLM_INPUTS/2way__AGG/2w__AGG__inputs_%s_%s.RDS', FREQ, SPLITMOD))
 
 
 
@@ -47,13 +47,13 @@ mod_res[c("Tissue","Stage","AGGGROUP","CNA_type")] <- str_split_fixed(mod_res$Ti
 
 
 ### ... Saving files
-if (!file.exists('./DATA/MODEL_OUTPUTS/')){
-  dir.create('./DATA/MODEL_OUTPUTS/')
+if (!file.exists('./DATA/GLM_OUTPUTS/')){
+  dir.create('./DATA/GLM_OUTPUTS/')
 }
-if (!file.exists('./DATA/MODEL_OUTPUTS/2way__AGG')){
-  dir.create('./DATA/MODEL_OUTPUTS/2way__AGG')
+if (!file.exists('./DATA/GLM_OUTPUTS/2way__AGG')){
+  dir.create('./DATA/GLM_OUTPUTS/2way__AGG')
 }
-setwd('./DATA/MODEL_OUTPUTS/2way__AGG')
+setwd('./DATA/GLM_OUTPUTS/2way__AGG')
 saveRDS(mod_res, sprintf('./2w__AGG__outputs_%s_%s.RDS', FREQ, SPLITMOD))
 write.table(mod_res, sprintf('./2w__AGG__outputs_%s_%s.tsv', FREQ, SPLITMOD),
             sep="\t", quote=FALSE, row.names = FALSE)

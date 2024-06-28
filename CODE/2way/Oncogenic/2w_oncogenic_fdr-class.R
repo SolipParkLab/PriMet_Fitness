@@ -40,8 +40,8 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 ### ... Uploading files ----
-model_results <- readRDS(sprintf("./DATA/MODEL_OUTPUTS/2way__OG/2w__OG__glm-outputs_%s_%s.RDS",FREQ,SPLITMOD))
-model_inputs <- read.delim(sprintf("./DATA/MODEL_INPUTS/2way__OG/2w__OG__glm-inputs_%s_%s.tsv",FREQ,SPLITMOD),
+model_results <- readRDS(sprintf("./DATA/GLM_OUTPUTS/2way__OG/2w__OG__glm-outputs_%s_%s.RDS",FREQ,SPLITMOD))
+model_inputs <- read.delim(sprintf("./DATA/GLM_INPUTS/2way__OG/2w__OG__glm-inputs_%s_%s.tsv",FREQ,SPLITMOD),
                            sep="\t",
                            header=T)
 color_codes <- read.csv("./DATA/PROCESSED_DATA/p_color-codes_cancer-types.tsv",

@@ -1,5 +1,3 @@
-setwd('/home/adrian/PROJECTS/002.High_Order_Interactions/Git_Hub/')
-
 
 ### ... Loading libraries ----
 library(dplyr)
@@ -48,7 +46,9 @@ write.table(color_codes,"./DATA/PROCESSED_DATA/p_color_codes.tsv",
 mut_annot_data <- read.delim("./DATA/PROCESSED_DATA/p_OKB-annotated_MAF_data_mutations.oncokb.txt",
                              sep="\t")
 mut_annot_reduced <- unique(mut_annot_data[c("Hugo_Symbol","GENE_IN_ONCOKB")])
-mut_annot_reduced$Is.in.cancerGeneList.AsAliases <- ifelse(mut_annot_reduced$Hugo_Symbol %in% unique(sort(unlist(str_split(cancerGeneList$Gene.Aliases,", ")))),T,F)
+mut_annot_reduced$Is.in.cancerGeneList.AsAliases <- ifelse(mut_annot_reduced$Hugo_Symbol %in% unique(sort(unlist(str_split(cancerGeneList$Gene.Aliases,", ")))),
+                                                           T,
+                                                           F)
 mut_annot_reduced$New.Hugo.Symbol <- unlist(apply(mut_annot_reduced,1,function(row){
   if (row["Is.in.cancerGeneList.AsAliases"]==T){
     newsymb <- cancerGeneList[grep(paste0("\\b",row["Hugo_Symbol"],"\\b"),cancerGeneList$Gene.Aliases),]$Hugo.Symbol
@@ -58,69 +58,8 @@ mut_annot_reduced$New.Hugo.Symbol <- unlist(apply(mut_annot_reduced,1,function(r
   }
 }))
 conversion_df <- filter(mut_annot_reduced,Is.in.cancerGeneList.AsAliases==T)
-write.table(conversion_df, "./DATA/PROCESSED_DATA/p_gene-names_conversion_table_CASTAÑA.tsv",
+write.table(conversion_df, "./DATA/PROCESSED_DATA/p_gene-names_conversion_table.tsv",
             sep="\t", quote=FALSE, row.names = FALSE)
-
-
-
-# # ### ... CNA DATA MINING to later create binary matrix ----
-# cna_data <- read.table("./DATA/RAW_DATA/msk_met_2021/data_cna.txt",
-#                        sep="\t", header=T)
-# clinical_data <- read.table("./DATA/RAW_DATA/msk_met_2021/data_clinical_sample.txt",
-#                             sep="\t",
-#                             header=T)[c("SAMPLE_ID","ORGAN_SYSTEM","SAMPLE_TYPE")]
-# # old_binary_mats <- readRDS("./DATA/PROCESSED_DATA/previous_001_oncokb_binary_matrixes.RDS")
-# binary_mats <- readRDS("./DATA/PROCESSED_DATA/001_oncokb_binary_matrixes.RDS")
-# conversion_df <- read.delim("./DATA/PROCESSED_DATA/p_gene-names_conversion_table.tsv",
-#                             sep="\t")
-# ### ... Changing spaces to -
-# clinical_data$ORGAN_SYSTEM <- str_replace_all(clinical_data$ORGAN_SYSTEM," ","-")
-# # cna_data$Hugo_Symbol <-  unlist(apply(cna_data,1,function(row){
-# #   if(any(grepl(paste0("\\b",row["Hugo_Symbol"],"\\b"),conversion_df$Hugo_Symbol))){
-# #     newname <- conversion_df[grep(paste0("\\b",row["Hugo_Symbol"],"\\b"),conversion_df$Hugo_Symbol),"New.Hugo.Symbol"]
-# #     return(newname)
-# #   }else{
-# #     return(row["Hugo_Symbol"])
-# #   }
-# # }))
-# rownames(cna_data) <- cna_data$Hugo_Symbol
-# cna_data$Hugo_Symbol <- NULL
-# colnames(cna_data) <- str_replace_all(colnames(cna_data),"\\.","-")
-# cna_data[cna_data==2|cna_data==1.5] <- 1
-# cna_data[cna_data==-2|cna_data==-1.5] <- -1
-# cna_data <- data.frame(t(cna_data))
-# cna_data <- merge(cna_data,
-#                   clinical_data[c("SAMPLE_ID","ORGAN_SYSTEM")],
-#                   by.x="row.names",
-#                   by.y="SAMPLE_ID")
-# cna_data_by_cancer_type <- split(cna_data[,2:(ncol(cna_data)-1)],cna_data$ORGAN_SYSTEM)
-# freqs_list <- mapply(function(new_canc_type_df,old_canc_type_df){
-#   # new_gain_freqs <- as.data.frame(apply(new_canc_type_df,2,function(x){return(sum(x==1)/length(x))}))
-#   # new_loss_freqs <- as.data.frame(apply(new_canc_type_df,2,function(x){return(sum(x==-1)/length(x))}))
-#   new_gain_freqs <- as.data.frame(apply(new_canc_type_df[grep("_Gain",names(new_canc_type_df))],2,function(x){return(sum(x)/length(x))}))
-#   rownames(new_gain_freqs) <- str_remove_all(rownames(new_gain_freqs),"_Gain")
-#   new_loss_freqs <- as.data.frame(apply(new_canc_type_df[grep("_Loss",names(new_canc_type_df))],2,function(x){return(sum(x)/length(x))}))
-#   rownames(new_loss_freqs) <- str_remove_all(rownames(new_loss_freqs),"_Loss")
-#   old_gain_freqs <- as.data.frame(apply(old_canc_type_df[grep("_Gain",names(old_canc_type_df))],2,function(x){return(sum(x)/length(x))}))
-#   rownames(old_gain_freqs) <- str_remove_all(rownames(old_gain_freqs),"_Gain")
-#   old_loss_freqs <- as.data.frame(apply(old_canc_type_df[grep("_Loss",names(old_canc_type_df))],2,function(x){return(sum(x)/length(x))}))
-#   rownames(old_loss_freqs) <- str_remove_all(rownames(old_gain_freqs),"_Loss")
-#   gain_freqs <- setNames(merge(new_gain_freqs,old_gain_freqs,by="row.names"),
-#                          c("Gene","GainF_New","GainF_Old"))
-#   loss_freqs <- setNames(merge(new_loss_freqs,old_loss_freqs,by="row.names"),
-#                          c("Gene","LossF_New","LossF_Old"))
-#   freqs <- merge(gain_freqs,loss_freqs)
-#   return(freqs)
-# },
-# # cna_data_by_cancer_type,binary_mats,SIMPLIFY = F)
-# binary_mats,old_binary_mats,SIMPLIFY=F)
-# freqs_df <- map_df(freqs_list,~as.data.frame(.x),.id="Tissue")
-
-
-
-
-
-
 
 
 
@@ -196,7 +135,6 @@ raw_binary_matrixes_list <- lapply(names(data_list),function(tiss){
   cnv_df_long$count <- NULL
   ### ... Storing genes that have at least 1 cna alteration in vector
   cnaGenes <- unique(sort(cnv_df_long$Gene))
-  print(paste0("For ",tiss," tissue, ",length(mutGenes)," genes have mutations, ",length(cnaGenes)," have CNAs. ",length(intersect(mutGenes,cnaGenes))," have both."))
   cnv_df_long$Gene <- paste0(cnv_df_long$Gene,"_",cnv_df_long$Alter)
   cnv_df_long$Alter <- NULL
   ### ... Merging oncogenic mutations with cna information (ALL ONCOGENIC FROM MAF)
@@ -257,7 +195,7 @@ saveRDS(oncokb_binary_matrixes_list,
 ## Adding information of use for all the models 
 ## STAGE_PWOWM, TREATMENT, METASTATIC AGGRESSIVENESS (MET_COUNT), 
 ## METASTATIC AGGRESSIVENESS (TIMING)
-clinical_data <- read.table("./DATA/PROCESSED_DATA//msk_met_2021/data_clinical_sample.txt",
+clinical_data <- read.table("./DATA/RAW_DATA/msk_met_2021/data_clinical_sample.txt",
                             sep="\t",
                             header=T)
 # For treatment information 
@@ -326,13 +264,46 @@ metastatic_location_df$PRIM_CAP <- toupper(metastatic_location_df$PRIMARY_SITE)
 metastatic_location_df <- merge(metastatic_location_df,
                                 pathology_to_organs_df,
                                 by.x = 'PRIM_CAP',
-                                by.y = 'Description')
-
-
-round(prop.table(table(meta_biopsy_locations$BIOPSY_LOCATION))*100,1)
-samples_per_biopsy_location <- meta_biopsy_locations %>% group_by(BIOPSY_LOCATION) %>% summarise(N = sum(N_SAMPLES))
-samples_per_biopsy_location$pc <- round(prop.table(samples_per_biopsy_location$N)*100,1)
-write.table(filter(metastatic_location_data,SAMPLE_TYPE=="Metastasis"),"./DATA/PROCESSED_DATA/p_metastatic-biopsy-locations.tsv",
+                                by.y = 'Description') %>% 
+  rename('Prim.Organ' = 'Organ_Site')
+metastatic_location_df$META_CAP <- toupper(metastatic_location_df$METASTATIC_SITE)
+metastatic_location_df <- merge(metastatic_location_df,
+                                pathology_to_organs_df,
+                                by.x = 'META_CAP', by.y = 'Description', all.x = T) %>% 
+  rename('Meta.Organ' = 'Organ_Site')
+metastatic_location_df$Meta.Organ <- ifelse(
+  !is.na(metastatic_location_df$Meta.Organ), metastatic_location_df$META_CAP,
+  ifelse(metastatic_location_df$META_CAP == 'BLADDER/UT', 'BLADDER_OR_URINARY_TRACT',
+         ifelse(metastatic_location_df$META_CAP == 'CNS/BRAIN', 'CNS_BRAIN',
+                ifelse(metastatic_location_df$META_CAP == 'DISTANT LN', 'LYMPH',
+                       ifelse(metastatic_location_df$META_CAP == 'FEMALE GENITAL', 'GENITAL_FEMALE',
+                              ifelse(metastatic_location_df$META_CAP == 'INTRA-ABDOMINAL', 'OTHER',
+                                     ifelse(metastatic_location_df$META_CAP == 'MALE GENITAL', 'GENITAL_MALE',
+                                            ifelse(metastatic_location_df$META_CAP == 'UNSPECIFIED', 'UNSPECIFIED', 'MISTAKE_CHECK'))))))))
+metastatic_location_df$BIOPSY_LOCATION <- ifelse(grepl('Unknown', metastatic_location_df$PRIMARY_SITE), 'Unknown primary',
+                                                 ifelse(metastatic_location_df$Meta.Organ == 'LYMPH', 'Lymph',
+                                                        ifelse(metastatic_location_df$Meta.Organ == 'OTHER', 'Other',
+                                                               ifelse(metastatic_location_df$Meta.Organ == 'UNSPECIFIED', 'Unspecified',
+                                                                      ifelse(metastatic_location_df$Meta.Organ == metastatic_location_df$Prim.Organ, 'Local',
+                                                                             'Distal')))))
+table(metastatic_location_df$BIOPSY_LOCATION)
+samples_per_biopsy_location <- metastatic_location_df %>% 
+  group_by(PRIMARY_SITE, METASTATIC_SITE, BIOPSY_LOCATION) %>%
+  summarise(N_SAMPLES = n())
+# Some samples have been duplicated
+meta_location_unique <- unique(metastatic_location_df[,c("SAMPLE_ID", "PRIMARY_SITE", "METASTATIC_SITE", "BIOPSY_LOCATION")])
+# Some samples are still duplicated
+dupped_samples <- as.character(filter(as.data.frame(table(meta_location_unique$SAMPLE_ID)), Freq == 2)$Var1)
+to_add <- filter(meta_location_unique, SAMPLE_ID %in% dupped_samples)
+to_add <- filter(to_add, BIOPSY_LOCATION == 'Local') # Manually checked that duplicated samples are local biopsies
+meta_location_unique <- meta_location_unique[-which(meta_location_unique$SAMPLE_ID %in% dupped_samples),] # Removing duplicated samples
+# Adding the non-duplicated rows
+meta_location_unique <- bind_rows(meta_location_unique,
+                                  to_add)
+samples_per_biopsy_location <- meta_location_unique %>% 
+  group_by(PRIMARY_SITE, METASTATIC_SITE, BIOPSY_LOCATION) %>% 
+  summarise('N_SAMPLES' = n())
+write.table(samples_per_biopsy_location, "./DATA/PROCESSED_DATA/p_metastatic-biopsy-locations.tsv",
             sep = "\t", row.names = F, quote = F)
 
 
@@ -342,8 +313,10 @@ alterations_per_sample <- lapply(unname(oncokb_binary_matrixes_list),function(ma
 alterations_per_sample <- data.frame(N_ONCOGENIC_ALTERATIONS=unlist(alterations_per_sample,recursive=F))
 
 
-clean_clinical_data <- clinical_data[c("SAMPLE_ID","ORGAN_SYSTEM","SUBTYPE_ABBREVIATION","SAMPLE_TYPE","MET_COUNT","PRIMARY_SITE","METASTATIC_SITE","IS_DIST_MET_MAPPED","TUMOR_PURITY","SAMPLE_COVERAGE")]
-names(clean_clinical_data) <- c("SAMPLE_ID","CANC_TYPE","CANC_SUBTYPE","STAGE_PM","MET_COUNT","PRIM_SITE","MET_SITE","IS_DIST_MET_MAPPED","TUMOR_PURITY","SAMPLE_COVERAGE")
+clean_clinical_data <- clinical_data[c("SAMPLE_ID","ORGAN_SYSTEM","SUBTYPE_ABBREVIATION","SAMPLE_TYPE","MET_COUNT",
+                                       "PRIMARY_SITE","METASTATIC_SITE","IS_DIST_MET_MAPPED","TUMOR_PURITY","SAMPLE_COVERAGE")]
+names(clean_clinical_data) <- c("SAMPLE_ID","CANC_TYPE","CANC_SUBTYPE","STAGE_PM","MET_COUNT","PRIM_SITE","MET_SITE",
+                                "IS_DIST_MET_MAPPED","TUMOR_PURITY","SAMPLE_COVERAGE")
 clean_clinical_data <- merge(clean_clinical_data,stage2,by="SAMPLE_ID")
 clean_clinical_data <- merge(clean_clinical_data,treatment_table,by="SAMPLE_ID")
 clean_clinical_data <- merge(clean_clinical_data,timing_diagnosis_data[c("SAMPLE_ID","YEARS_BTW_METAS","DIAGNOSES")],all.x=T)
@@ -397,23 +370,39 @@ clonal_fraction_bytissue_modelvariants <- melt(table(maf_for_models$Hugo_Symbol,
                                                value.name="Model.Variants")
 clonal_fraction_bytissue <- merge(clonal_fraction_bytissue_allvariants,clonal_fraction_bytissue_modelvariants)
 rm(clonal_fraction_bytissue_allvariants,clonal_fraction_bytissue_modelvariants)
-clonal_fraction_bytissue <- clonal_fraction_bytissue %>% group_by(Gene,Tissue,Stage,Treatment,Function) %>% mutate(Gene_CF_All.Variants_wStagewTreatwFunction = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
-                                                                                                                   Gene_CF_Model.Variants_wStagewTreatwFunction = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
-clonal_fraction_bytissue <- clonal_fraction_bytissue %>% group_by(Gene,Tissue,Stage,Function) %>% mutate(Gene_CF_All.Variants_wStagewFunction = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
-                                                                                                         Gene_CF_Model.Variants_wStagewFunction = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
-clonal_fraction_bytissue <- clonal_fraction_bytissue %>% group_by(Gene,Tissue,Stage,Treatment) %>% mutate(Gene_CF_All.Variants_wStagewTreat = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
-                                                                                                          Gene_CF_Model.Variants_wStagewTreat = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
-clonal_fraction_bytissue <- clonal_fraction_bytissue %>% group_by(Gene,Tissue,Stage) %>% mutate(Gene_CF_All.Variants_wStage = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
-                                                                                                Gene_CF_Model.Variants_wStage = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
+clonal_fraction_bytissue <- clonal_fraction_bytissue %>% 
+  group_by(Gene,Tissue,Stage,Treatment,Function) %>% 
+  mutate(Gene_CF_All.Variants_wStagewTreatwFunction = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
+         Gene_CF_Model.Variants_wStagewTreatwFunction = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
+clonal_fraction_bytissue <- clonal_fraction_bytissue %>% 
+  group_by(Gene,Tissue,Stage,Function) %>% 
+  mutate(Gene_CF_All.Variants_wStagewFunction = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
+         Gene_CF_Model.Variants_wStagewFunction = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
+clonal_fraction_bytissue <- clonal_fraction_bytissue %>% 
+  group_by(Gene,Tissue,Stage,Treatment) %>% 
+  mutate(Gene_CF_All.Variants_wStagewTreat = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
+         Gene_CF_Model.Variants_wStagewTreat = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
+clonal_fraction_bytissue <- clonal_fraction_bytissue %>% 
+  group_by(Gene,Tissue,Stage) %>% 
+  mutate(Gene_CF_All.Variants_wStage = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
+         Gene_CF_Model.Variants_wStage = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
 
-clonal_fraction_bytissue <- clonal_fraction_bytissue %>% group_by(Tissue,Stage,Treatment,Function) %>% mutate(CF_All.Variants_wStagewTreatwFunction = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
-                                                                                                              CF_Model.Variants_wStagewTreatwFunction = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
-clonal_fraction_bytissue <- clonal_fraction_bytissue %>% group_by(Tissue,Stage,Function) %>% mutate(CF_All.Variants_wStagewFunction = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
-                                                                                                    CF_Model.Variants_wStagewFunction = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
-clonal_fraction_bytissue <- clonal_fraction_bytissue %>% group_by(Tissue,Stage,Treatment) %>% mutate(CF_All.Variants_wStagewTreat = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
-                                                                                                     CF_Model.Variants_wStagewTreat = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
-clonal_fraction_bytissue <- clonal_fraction_bytissue %>% group_by(Tissue,Stage) %>% mutate(CF_All.Variants_wStage = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
-                                                                                           CF_Model.Variants_wStage = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
+clonal_fraction_bytissue <- clonal_fraction_bytissue %>% 
+  group_by(Tissue,Stage,Treatment,Function) %>% 
+  mutate(CF_All.Variants_wStagewTreatwFunction = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
+         CF_Model.Variants_wStagewTreatwFunction = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
+clonal_fraction_bytissue <- clonal_fraction_bytissue %>% 
+  group_by(Tissue,Stage,Function) %>% 
+  mutate(CF_All.Variants_wStagewFunction = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
+         CF_Model.Variants_wStagewFunction = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
+clonal_fraction_bytissue <- clonal_fraction_bytissue %>% 
+  group_by(Tissue,Stage,Treatment) %>% 
+  mutate(CF_All.Variants_wStagewTreat = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
+         CF_Model.Variants_wStagewTreat = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
+clonal_fraction_bytissue <- clonal_fraction_bytissue %>% 
+  group_by(Tissue,Stage) %>% 
+  mutate(CF_All.Variants_wStage = sum(All.Variants[Clonality=="CLONAL"])/sum(All.Variants),
+         CF_Model.Variants_wStage = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
 write.table(clonal_fraction_bytissue, "./DATA/PROCESSED_DATA/p_clonality_by-tissue.tsv",
             sep="\t", quote=F, row.names=F)
 
@@ -488,8 +477,12 @@ saveRDS(clonal_binary_matrixes,"./DATA/PROCESSED_DATA/clonality_binary_matrixes.
 
 ################################################################################
 ############ ADDING MORE THINGS TO CLINICAL DATA TABLE #########################
-clean_clinical_data <- merge(clean_clinical_data,alterations_per_sample,by.x="SAMPLE_ID",by.y="row.names")
-clean_clinical_data <- merge(clean_clinical_data,no_altered_patients)
+clean_clinical_data <- merge(clean_clinical_data,
+                             alterations_per_sample,
+                             by.x="SAMPLE_ID",
+                             by.y="row.names")
+clean_clinical_data <- merge(clean_clinical_data,
+                             no_altered_patients)
 ################################################################################
 
 

@@ -31,7 +31,7 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 ## Uploading files ----
-model_results <- readRDS(sprintf('./DATA/MODEL_OUTPUTS/2way__AGG/2w__AGG__outputs_%s_%s.RDS', FREQ, SPLITMOD))
+model_results <- readRDS(sprintf('./DATA/GLM_OUTPUTS/2way__AGG/2w__AGG__outputs_%s_%s.RDS', FREQ, SPLITMOD))
 
 
 

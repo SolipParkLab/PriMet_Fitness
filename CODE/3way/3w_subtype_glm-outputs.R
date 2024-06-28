@@ -29,8 +29,8 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 ### ... Input files
-model_inputs <- readRDS(sprintf('./DATA/MODEL_INPUTS/3way__TG/3w__TG__inputs_%s_%s.RDS', FREQ, SPLITMOD))
-gene_list <- readRDS(sprintf('./DATA/MODEL_INPUTS/3way__TG/3w__TG__sig-2w-pairs-to-test_%s_%s.RDS', FREQ, SPLITMOD)) %>% 
+model_inputs <- readRDS(sprintf('./DATA/GLM_INPUTS/3way__TG/3w__TG__glm-inputs_%s_%s.RDS', FREQ, SPLITMOD))
+gene_list <- readRDS(sprintf('./DATA/GLM_INPUTS/3way__TG/3w__TG__sig-2w-pairs-to-test_%s_%s.RDS', FREQ, SPLITMOD)) %>% 
   mutate(model = paste0(Tissue,'.',Subtype,'.',Stage))
 gene_list_split <- gene_list[c('Gene', 'Tissue', 'Subtype', 'Stage', 'CNA_type', 'model')]
 gene_list_split <- split(gene_list_split, gene_list$model)
@@ -124,13 +124,13 @@ for (name in colnames(a)) {
 
 
 ### ... Saving files ----
-if (!file.exists('./DATA/MODEL_OUTPUTS/')){
-  dir.create('./DATA/MODEL_OUTPUTS//')
+if (!file.exists('./DATA/GLM_OUTPUTS/')){
+  dir.create('./DATA/GLM_OUTPUTS/')
 }
-if (!file.exists('./DATA/MODEL_OUTPUTS/3way__TG')){
-  dir.create('./DATA/MODEL_OUTPUTS/3way__TG')
+if (!file.exists('./DATA/GLM_OUTPUTS/3way__TG')){
+  dir.create('./DATA/GLM_OUTPUTS/3way__TG')
 }
-setwd('./DATA/MODEL_OUTPUTS/3way__TG')
-saveRDS(a, sprintf('./3w__TG__outputs_%s_%s.RDS', FREQ, SPLITMOD))
-write.table(a, sprintf('./3w__TG__outputs_%s_%s.tsv', FREQ, SPLITMOD),
+setwd('./DATA/GLM_OUTPUTS/3way__TG')
+saveRDS(a, sprintf('./3w__TG__glm-outputs_%s_%s.RDS', FREQ, SPLITMOD))
+write.table(a, sprintf('./3w__TG__glm-outputs_%s_%s.tsv', FREQ, SPLITMOD),
             sep = '\t', row.names = F, quote = F)

@@ -189,16 +189,16 @@ SC_inputs <- generate_inputs('SC_Level')
 AGE_inputs <- generate_inputs('AGE_Level')
 CL_inputs <- generate_inputs('CL_Level')
 # Saving inputs
-if (!file.exists('./DATA/MODEL_INPUTS/')){
-  dir.create('./DATA/MODEL_INPUTS/')
+if (!file.exists('./DATA/GLM_INPUTS/')){
+  dir.create('./DATA/GLM_INPUTS/')
 }
-if (!file.exists('./DATA/MODEL_INPUTS/2way__CONF_FACTORS/')){
-  dir.create('./DATA/MODEL_INPUTS/2way__CONF_FACTORS/')
+if (!file.exists('./DATA/GLM_INPUTS/2way__CONF_FACTORS/')){
+  dir.create('./DATA/GLM_INPUTS/2way__CONF_FACTORS/')
 }
-saveRDS(TP_inputs$List, './DATA/MODEL_INPUTS/2way__CONF_FACTORS/TP_inputs.RDS')
-saveRDS(SC_inputs$List, './DATA/MODEL_INPUTS/2way__CONF_FACTORS/SC_inputs.RDS')
-saveRDS(AGE_inputs$List, './DATA/MODEL_INPUTS/2way__CONF_FACTORS/AGE_inputs.RDS')
-saveRDS(CL_inputs$List, './DATA/MODEL_INPUTS/2way__CONF_FACTORS/CL_inputs.RDS')
+saveRDS(TP_inputs$List, './DATA/GLM_INPUTS/2way__CONF_FACTORS/TP_glm-inputs.RDS')
+saveRDS(SC_inputs$List, './DATA/GLM_INPUTS/2way__CONF_FACTORS/SC_glm-inputs.RDS')
+saveRDS(AGE_inputs$List, './DATA/GLM_INPUTS/2way__CONF_FACTORS/AGE_glm-inputs.RDS')
+saveRDS(CL_inputs$List, './DATA/GLM_INPUTS/2way__CONF_FACTORS/CL_glm-inputs.RDS')
 
 
 
@@ -227,10 +227,10 @@ SC_outputs <- generate_outputs(SC_inputs$List,'SC_Level')
 AGE_outputs <- generate_outputs(AGE_inputs$List,'AGE_Level')
 CL_outputs <- generate_outputs(CL_inputs$List,'CL_Level')
 # Saving outputs
-if (!file.exists('./DATA/MODEL_OUTPUTS/2way__CONF_FACTORS/')){
-  dir.create('./DATA/MODEL_OUTPUTS/2way__CONF_FACTORS/')
+if (!file.exists('./DATA/GLM_OUTPUTS/2way__CONF_FACTORS/')){
+  dir.create('./DATA/GLM_OUTPUTS/2way__CONF_FACTORS/')
 }
-saveRDS(TP_outputs$DF, './DATA/MODEL_OUTPUTS/2way__CONF_FACTORS/TP_outputs.RDS')
-saveRDS(SC_outputs$DF, './DATA/MODEL_OUTPUTS/2way__CONF_FACTORS/SC_outputs.RDS')
-saveRDS(AGE_outputs$DF, './DATA/MODEL_OUTPUTS/2way__CONF_FACTORS/AGE_outputs.RDS')
-saveRDS(CL_outputs$DF, './DATA/MODEL_OUTPUTS/2way__CONF_FACTORS/CL_outputs.RDS')
+saveRDS(TP_outputs$DF, './DATA/GLM_OUTPUTS/2way__CONF_FACTORS/TP_glm-outputs.RDS')
+saveRDS(SC_outputs$DF, './DATA/GLM_OUTPUTS/2way__CONF_FACTORS/SC_glm-outputs.RDS')
+saveRDS(AGE_outputs$DF, './DATA/GLM_OUTPUTS/2way__CONF_FACTORS/AGE_glm-outputs.RDS')
+saveRDS(CL_outputs$DF, './DATA/GLM_OUTPUTS/2way__CONF_FACTORS/CL_glm-outputs.RDS')

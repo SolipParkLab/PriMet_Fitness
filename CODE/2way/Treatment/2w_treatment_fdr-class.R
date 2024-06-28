@@ -35,7 +35,7 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 ## Uploading files ----
-model_results_df <- readRDS(sprintf("./DATA/MODEL_OUTPUTS/2way__T/2w__T__outputs_%s_%s.RDS", FREQ, SPLITMOD))
+model_results_df <- readRDS(sprintf("./DATA/GLM_OUTPUTS/2way__T/2w__T__glm-outputs_%s_%s.RDS", FREQ, SPLITMOD))
 color_codes <- read.csv("./DATA/PROCESSED_DATA/p_color-codes_cancer-types.tsv",
                         sep="\t", header=T)
 cancgenedf <- read.csv("./DATA/PROCESSED_DATA/p_cancer-gene-list.tsv", 
