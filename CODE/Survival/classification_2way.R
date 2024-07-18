@@ -63,7 +63,7 @@ classification_2way <- classification_2way %>% reduce(full_join, by = 'SAMPLE_ID
 
 
 ### ... Adding this classification to the clinical data
-full_clinical <- read.delim('./HOI/full_clinical_data.tsv', sep = '\t')
+full_clinical <- read.delim('./DATA/PROCESSED_DATA/p_clinical-data.tsv', sep = '\t')
 full_clinical <- merge(full_clinical,
                        classification_2way,
                        by = 'SAMPLE_ID',

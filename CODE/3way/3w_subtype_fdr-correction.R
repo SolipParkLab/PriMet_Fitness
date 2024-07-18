@@ -2,7 +2,6 @@
 ### ... Loading libraries ----
 library(stringr)
 library(tidyr)
-library(purrr)
 library(tibble)
 library(plyr)
 library(dplyr)

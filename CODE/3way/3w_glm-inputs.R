@@ -6,9 +6,6 @@ library(purrr)
 library(reshape2)
 library(tidyr)
 library(tibble)
-library(eulerr)
-library(gridExtra)
-library(ggplot2)
 args <- commandArgs(trailingOnly = TRUE)
 
 

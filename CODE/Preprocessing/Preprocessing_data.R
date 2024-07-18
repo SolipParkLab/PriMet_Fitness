@@ -1,12 +1,11 @@
 
 ### ... Loading libraries ----
 library(dplyr)
-library(openxlsx)
+library(readxl)
 library(stringr)
 library(reshape2)
 library(tidyr)
 library(tibble)
-library(ggplot2)
 library(purrr)
 
 
@@ -31,7 +30,7 @@ write.table(cancgenedf[c(1,4)], "./DATA/PROCESSED_DATA/p_cancer-gene-list.tsv",
 
 
 ### ... Color codes by cancer type (Tissue) and cancer subtype ----
-suppl_table_1_1 <- read.xlsx("./DATA/RAW_DATA/msk_met_2021/supplementary_data_paper/1-s2.0-S0092867422000034-mmc1.xlsx",
+suppl_table_1_1 <- read_xlsx("./DATA/RAW_DATA/msk_met_2021/supplementary_data_paper/1-s2.0-S0092867422000034-mmc1.xlsx",
                              sheet = 1, startRow = 2, colNames = T)
 color_codes <- unique(suppl_table_1_1[c("curated_subtype_abbr","organ_system","color_organ_system","color_subtype")])
 names(color_codes) <- c("Subtype","Tissue","Tissue_color","Subtype_color")

@@ -1,12 +1,10 @@
 
 ### ... Loading libraries ----
 library(dplyr)
-library(openxlsx)
 library(stringr)
 library(reshape2)
 library(tidyr)
 library(tibble)
-library(ggplot2)
 library(purrr)
 "%!in%" <- Negate("%in%")
 

@@ -4,13 +4,8 @@ library(stringr)
 library(dplyr)
 library(purrr)
 library(reshape2)
-library(ggplot2)
 library(tidyr)
-library(ggsignif)
-library(plotrix)
 library(tibble)
-library(ggalluvial)
-library(gridExtra)
 options(dplyr.summarise.inform = FALSE)
 
 

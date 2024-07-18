@@ -3,13 +3,9 @@
 library(tidyr)
 library(reshape2)
 library(dplyr)
-library(ggplot2)
-library(gridExtra)
 library(stringr)
 library(tibble)
 library(purrr)
-library(ppcor)
-library(rlang)
 options(dplyr.summarise.inform = FALSE)
 
 

@@ -1,12 +1,7 @@
 
 ### ... Libraries ----
-library(cluster)
-library(plotrix)
-library(ggsignif)
 library(dplyr)
 library(tidyr)
-library(ggplot2)
-library(gridExtra)
 library(purrr)
 library(stringr)
 

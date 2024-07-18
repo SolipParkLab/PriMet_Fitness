@@ -17,6 +17,10 @@ library(ggplot2)
 total <- read.delim('./DATA/ANALYSIS_DATA/2way__OG/2wOG_PERM_analysis_mf1-cf10_Tissue-Stage-PM.tsv', sep = '\t')
 
 
+### ... Storing files ----
+setwd('./DATA/ANALYSIS_DATA/2way__OG')
+
+
 
 ###############################################################################
 # We're going to analyse class perturbation across stages
