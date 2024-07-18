@@ -1,6 +1,3 @@
-setwd('/home/adrian/PROJECTS/002.High_Order_Interactions/')
-
-
 
 ### ... Libraries
 library(dplyr)
