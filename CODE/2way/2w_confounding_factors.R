@@ -36,8 +36,6 @@ clonality <- read.table('./DATA/ANALYSIS_DATA/Sample_Clonality/clonality_results
                         sep = '\t', header = T)
 cancgenedf <- read.csv("./DATA/PROCESSED_DATA/p_cancer-gene-list.tsv",
                        sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-color_codes <- read.csv("./DATA/PROCESSED_DATA/p_color-codes_cancer-types.tsv",
-                        sep="\t", header=T)
 
 
 
@@ -97,8 +95,6 @@ confounding_factors_df <- merge(clinical_data[c("SAMPLE_ID", 'CANC_TYPE', "STAGE
 confounding_factors_df <- merge(confounding_factors_df,
                                 clonality[c('Sample', 'N_CLONAL', 'N_SUBCLONAL', 'Clonal_Fraction')],
                                 by.x = 'SAMPLE_ID', by.y = 'Sample', all.x = T)
-confounding_factors_df <- merge(confounding_factors_df,
-                                unique(color_codes[c("Tissue","Tissue_color")]))
 
 
 

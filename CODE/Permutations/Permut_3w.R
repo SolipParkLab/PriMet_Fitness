@@ -33,7 +33,7 @@ source("./CODE/common_reg-model-functions.R",local=T)
 ##### 1. RUNNING 3WAY MODEL WITH TWO-GENES #####
 ### ... Loading files ----
 permuted_matrixes <- readRDS(sprintf("./DATA/PROCESSED_DATA/PERMUTED_matrixes_%s.RDS",SPLITMOD))
-real_results_twogenes <- readRDS(sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_PERM_analysis_%s_%s_FDR%s.RDS", FREQ, SPLITMOD, FDR_2way))
+real_results_twogenes <- readRDS(sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_PERM_analysis_%s_%s_FDR%s.RDS", FREQ, SPLITMOD, FDR_2way))
 
 
 ### ... Creating function to generate two-genes binary matrix ONLY FOR SIGNIFICANT 2WAY GENES ----
@@ -99,7 +99,7 @@ real_results_twogenes_list <- split(real_results_twogenes,real_results_twogenes$
 
 
 ### ... Generating two-genes inputs with sig 2way pairs, running 3way regression model ----
-dir.create('./DATA/ANALYSIS_DATA/3way__TG/perm_outputs/')
+dir.create('./DATA/ANALYSIS_DATA/3way/perm_outputs/')
 twogenes_results <- mapply(function(bm_list,model_sigs){
   mod <- as.numeric(args[1])
   model_sigs <- real_results_twogenes_list[[mod]]
@@ -154,7 +154,7 @@ twogenes_results <- mapply(function(bm_list,model_sigs){
   })
   permuted_models_twogenes <- map_df(permuted_models_twogenes,~as.data.frame(.x),.id="Permutation")
   saveRDS(permuted_models_twogenes,
-          sprintf("./DATA/ANALYSIS_DATA/3way__TG/perm_outputs/3wTG_permutation_outputs_%s_%s_%s.RDS", FREQ, SPLITMOD, mod_name))
+          sprintf("./DATA/ANALYSIS_DATA/3way/perm_outputs/3wTG_permutation_outputs_%s_%s_%s.RDS", FREQ, SPLITMOD, mod_name))
   return(permuted_models_twogenes)
 },
 permuted_matrixes,
@@ -164,23 +164,23 @@ SIMPLIFY=F)
 
 
 ### ... Merging all files together ----
-files <- list.files(path=sprintf("./DATA/ANALYSIS_DATA/3way__TG/perm_outputs/",FREQ,SPLITMOD),
+files <- list.files(path=sprintf("./DATA/ANALYSIS_DATA/3way/perm_outputs/",FREQ,SPLITMOD),
                     pattern="3wTG_permutation_outputs*")
 names <- str_remove_all(str_remove_all(files,"3wTG_permutation_outputs"),".RDS")
-twogenes_results <- lapply(files,function(names){return(readRDS(sprintf("./DATA/ANALYSIS_DATA/3way__TG/%s", names)))})
+twogenes_results <- lapply(files,function(names){return(readRDS(sprintf("./DATA/ANALYSIS_DATA/3way/%s", names)))})
 names(twogenes_results) <- names
 
 
 
 ### ... Saving permutation outputs ----
 saveRDS(twogenes_results,
-        sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM_outputs_%s_%s.RDS", FREQ, SPLITMOD))
+        sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_permutation-fromPERM_outputs_%s_%s.RDS", FREQ, SPLITMOD))
 
 
 
 ##### 2. COUNTING SIGNIFICANTS #####
 ### ... Loading files ----
-twogenes_results <- readRDS(sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM_outputs_%s_%s.RDS", FREQ, SPLITMOD))
+twogenes_results <- readRDS(sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_permutation-fromPERM_outputs_%s_%s.RDS", FREQ, SPLITMOD))
 twogenes_results <- unlist(lapply(twogenes_results,function(tissue){
   permut_tissue <- split(tissue,tissue$Permutation)
   return(permut_tissue)
@@ -214,33 +214,33 @@ p_val_significant_twogenes_counts_list <- lapply(seq_along(twogenes_results)[as.
   return(counts_per_p_cut)})
 names(p_val_significant_twogenes_counts_list) <- as.numeric(args[1]):as.numeric(args[2])
 p_val_significant_twogenes_counts_list <- map_df(p_val_significant_twogenes_counts_list,~as.data.frame(.x), .id="Permutation")
-dir.create("./DATA/ANALYSIS_DATA/3way__TG/sig_counts/")
+dir.create("./DATA/ANALYSIS_DATA/3way/sig_counts/")
 write.table(p_val_significant_twogenes_counts_list,
-            sprintf("./DATA/ANALYSIS_DATA/3way__TG/sig_counts/3wTG_permutation-fromPERM_sig-pairs_%s_%s_%s.tsv", FREQ, SPLITMOD, args[1]),
+            sprintf("./DATA/ANALYSIS_DATA/3way/sig_counts/3wTG_permutation-fromPERM_sig-pairs_%s_%s_%s.tsv", FREQ, SPLITMOD, args[1]),
             sep="\t", quote=F, row.names=F)
 
 
 
-files <- list.files(path="./DATA/ANALYSIS_DATA/3way__TG/sig_counts/",
+files <- list.files(path="./DATA/ANALYSIS_DATA/3way/sig_counts/",
                     pattern="3wTG_permutation-fromPERM_sig-pairs")
 res <- lapply(files,function(name){
-  return(read.delim(sprintf("./DATA/ANALYSIS_DATA/sig_counts/3way__TG/%s", name),
+  return(read.delim(sprintf("./DATA/ANALYSIS_DATA/sig_counts/3way/%s", name),
                     header=T, sep="\t"))
 })
 p_val_significant_twogenes_counts_list <- map_df(res,~as.data.frame(.x),.id="Permutation")
 write.table(p_val_significant_twogenes_counts_list,
-            sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM_bindrows-sig-pairs_%s_%s_FDR%s.tsv", FREQ, SPLITMOD, FDR_2way),
+            sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_permutation-fromPERM_bindrows-sig-pairs_%s_%s_FDR%s.tsv", FREQ, SPLITMOD, FDR_2way),
             sep="\t", quote=F, row.names=F)
 
 
 
 
-p_val_significant_twogenes_counts_list <- read.delim(sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM_bindrows-sig-pairs_%s_%s_FDR%s.tsv", FREQ, SPLITMOD, FDR_2way),
+p_val_significant_twogenes_counts_list <- read.delim(sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_permutation-fromPERM_bindrows-sig-pairs_%s_%s_FDR%s.tsv", FREQ, SPLITMOD, FDR_2way),
                                                      sep="\t", header=T)
 
 
 ## Counting real model significants ----
-real_results_twogenes <- readRDS(sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_PERM_analysis_%s_%s_FDR%s.RDS", FREQ, SPLITMOD, FDR_2way))
+real_results_twogenes <- readRDS(sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_PERM_analysis_%s_%s_FDR%s.RDS", FREQ, SPLITMOD, FDR_2way))
 tofill_counts_df <- expand.grid(Tissue=c("Breast","Core-GI","Developmental-GI-Tract","Endocrine","Genitourinary","Gynecologic","Head-and-Neck","Skin","Soft-Tissue","Thoracic"),
                                 CNA_type=c("Loss","Gain"),
                                 Stage=c("Primary","Metastasis"))
@@ -254,13 +254,13 @@ count_real_significants_twogenes <- lapply(c(seq(0.000001,0.199999,0.000001),seq
 })
 count_real_significants_twogenes <- bind_rows(count_real_significants_twogenes)
 write.table(count_real_significants_twogenes,
-            sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM_real-sig-counts_%s_%s_FDR%s.tsv", FREQ, SPLITMOD, FDR_2way),
+            sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_permutation-fromPERM_real-sig-counts_%s_%s_FDR%s.tsv", FREQ, SPLITMOD, FDR_2way),
             sep="\t", quote=F, row.names=F)
 
 
 
 ## Merging count tables (permutation + real results) ----
-count_real_significants_twogenes <- read.delim(sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM_real-sig-counts_%s_%s_FDR%s.tsv", FREQ, SPLITMOD, FDR_2way),
+count_real_significants_twogenes <- read.delim(sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_permutation-fromPERM_real-sig-counts_%s_%s_FDR%s.tsv", FREQ, SPLITMOD, FDR_2way),
                                                sep="\t", header=T)
 permuted_twogenes_counts_bytissue <- merge(count_real_significants_twogenes,
                                            p_val_significant_twogenes_counts_list,
@@ -280,15 +280,15 @@ permuted_twogenes_counts_bytissue <- permuted_twogenes_counts_bytissue %>%
          Median_FDR=median(FDR,na.rm=T))
 ### ... Overwriting previous count file with joined infos (permut + real) + FDR
 write.table(permuted_twogenes_counts_bytissue,
-            sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM-0s_FDR-table_%s_%s.tsv",FREQ,SPLITMOD,FREQ,SPLITMOD),
+            sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_permutation-fromPERM-0s_FDR-table_%s_%s.tsv",FREQ,SPLITMOD,FREQ,SPLITMOD),
             sep="\t", quote=F, row.names=F)
 
 
 
 ### ... Loading files ----
-permuted_twogenes_counts <- read.delim(sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM-0s_FDR-table_%s_%s.tsv", FREQ, SPLITMOD),
+permuted_twogenes_counts <- read.delim(sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_permutation-fromPERM-0s_FDR-table_%s_%s.tsv", FREQ, SPLITMOD),
             sep="\t", header=T)
-real_results_twogenes <- readRDS(sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_PERM_analysis_%s_%s_FDR%s.RDS", FREQ, SPLITMOD, FDR_2way))
+real_results_twogenes <- readRDS(sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_PERM_analysis_%s_%s_FDR%s.RDS", FREQ, SPLITMOD, FDR_2way))
 
 permuted_twogenes_counts_conflictive <- filter(permuted_twogenes_counts,Real_Sig_twog_pairs==0)
 permuted_twogenes_counts_ok <- filter(permuted_twogenes_counts,Real_Sig_twog_pairs!=0)
@@ -304,23 +304,23 @@ permuted_twogenes_counts_conflictive <- permuted_twogenes_counts_conflictive %>%
          Median_FDR=median(FDR,na.rm=T))
 permuted_twogenes_counts <- bind_rows(permuted_twogenes_counts_conflictive,permuted_twogenes_counts_ok)
 write.table(permuted_twogenes_counts,
-            sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM-0s_FDR-table_%s_%s.tsv",FREQ,SPLITMOD,FREQ,SPLITMOD),
+            sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_permutation-fromPERM-0s_FDR-table_%s_%s.tsv",FREQ,SPLITMOD,FREQ,SPLITMOD),
             sep="\t", quote=F, row.names=F)
 
 permuted_twogenes_counts <- unique(permuted_twogenes_counts[c("CNA_type","Stage","P_cut","Mean_FDR","St_Err_FDR")])
 write.table(permuted_twogenes_counts,
-            sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_permutation-fromPERM-0s_conversion-table_%s_%s.tsv", FREQ, SPLITMOD),
+            sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_permutation-fromPERM-0s_conversion-table_%s_%s.tsv", FREQ, SPLITMOD),
             sep="\t", quote=F, row.names=F)
 
 
 
 ### ... Making final conversion table ----
-FDR_conversion_table <- read.delim(sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_FDR-conversion-table_%s_%s.tsv", FREQ, SPLITMOD),
+FDR_conversion_table <- read.delim(sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_FDR-conversion-table_%s_%s.tsv", FREQ, SPLITMOD),
 								   sep="\t", header=T)
 FDR_conversion_table_all <- FDR_conversion_table %>% 
 	group_by(CNA_type,Stage,P_cut) %>%
 	summarise(Mean_FDR=mean(Mean_FDR,na.rm=T),
 			  St_Err_FDR=plotrix::std.error(Mean_FDR,na.rm=T))
 write.table(FDR_conversion_table_all,
-            sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_FDR-conversion-table_%s_%s.tsv", FREQ, SPLITMOD),
+            sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_FDR-conversion-table_%s_%s.tsv", FREQ, SPLITMOD),
             sep="\t", quote=F, row.names=F)

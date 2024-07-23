@@ -13,7 +13,7 @@ library(survminer)
 # Clinical data
 clinical <- filter(read.delim('./DATA/PROCESSED_DATA/p_clinical_data_2genes-classification.tsv', check.names = F), N_ONCOGENIC_ALTERATIONS > 0)
 # Twogenes results
-twogenes <- filter(readRDS('./DATA/ANALYSIS_DATA/3WAY_TG/3wTG_PERM_analysis_mf1-cf10_Tissue-Stage-PM_FDR10.RDS'),
+twogenes <- filter(readRDS('./DATA/ANALYSIS_DATA/3WAY/3wTG_PERM_analysis_mf1-cf10_Tissue-Stage-PM_FDR10.RDS'),
                    SIG_FDR10_3way == F)
 
 

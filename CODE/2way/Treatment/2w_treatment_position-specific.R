@@ -19,16 +19,6 @@ freqcnv_threshold <- "0.10"
 binary_mats <- readRDS("./DATA/PROCESSED_DATA/Pos-Specific_oncokb_binary-matrices.RDS")
 clinical_data <- read.table("./DATA/PROCESSED_DATA/p_clinical-data.tsv",
                             sep = "\t", header=T)
-oncogenic_maf <- read.delim("./DATA/PROCESSED_DATA/p_oncogenic-MAF.tsv",
-                            sep="\t")
-oncogenic_maf <- merge(oncogenic_maf,
-                       clinical_data,
-                       by.x="Tumor_Sample_Barcode",
-                       by.y = "SAMPLE_ID")
-cancgenedf <- read.csv("./DATA/PROCESSED_DATA/p_cancer-gene-list.tsv", 
-                       sep = "\t",  header = TRUE,  stringsAsFactors = FALSE)
-color_codes <- read.csv("DATA/PROCESSED_DATA/p_color-codes_cancer-types.tsv",
-                        sep="\t", header=T)
 # Treatment results
 treat_res_sig <- filter(read.delim('./DATA/ANALYSIS_DATA/2way__T/2wT_PERM_analysis_mf1-cf10_Tissue-Stage-PM.tsv', sep = '\t'), SIG_FDR10 == T)
 treat_res_sig <- unique(treat_res_sig[c('Gene', 'Tissue', 'Stage', 'Treatment')])

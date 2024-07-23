@@ -106,7 +106,6 @@ write.table(full_output, './DATA/ANALYSIS_DATA/2way__T/2wT_TvsNT_Tarone-output.t
 
 
 ### ... Load permutation output and running Tarone in permutation ----
-# perm_input <- readRDS('../LAIA/005_analysis_data/2waymodel_treatment/mf1-cf10/Tissue-Stage-PM/2wT_permutation-outputs.RDS')
 perm_input <- readRDS('./DATA/ANALYSIS_DATA/2way__T/2wT_permutation-outputs.RDS')
 tarone_res <- full_output
 tarone_res$Sig_State <- ifelse(tarone_res$SIG_FDR10_Treatment == T & tarone_res$SIG_FDR10_Non_Treatment == T, 'Both',

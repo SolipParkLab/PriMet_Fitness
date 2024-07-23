@@ -32,13 +32,6 @@ binary_mats <- readRDS("./DATA/PROCESSED_DATA/001_oncokb_binary_matrixes.RDS")
 clinical_data <- read.table("./DATA/PROCESSED_DATA/p_clinical-data.tsv",
                             sep = "\t",
                             header=T)
-cancgenedf <- read.csv("./DATA/PROCESSED_DATA/p_cancer-gene-list.tsv", 
-                       sep = "\t", 
-                       header = TRUE, 
-                       stringsAsFactors = FALSE)
-color_codes <- read.csv("./DATA/PROCESSED_DATA/p_color-codes_cancer-types.tsv",
-                        sep="\t",
-                        header=T)
 
 
 

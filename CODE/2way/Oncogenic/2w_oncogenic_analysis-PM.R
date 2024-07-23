@@ -15,6 +15,15 @@ library(ggplot2)
 
 ### ... Input files ----
 total <- read.delim('./DATA/ANALYSIS_DATA/2way__OG/2wOG_PERM_analysis_mf1-cf10_Tissue-Stage-PM.tsv', sep = '\t')
+clonal_functional_clinical_maf <- read.delim("./DATA/PROCESSED_DATA/p_clonal-MAF.tsv", sep="\t", header=T)
+# Changing metastatic biopsy ---- 
+clonal_functional_clinical_maf$Location_plot <- ifelse(clonal_functional_clinical_maf$BIOPSY_LOCATION=="Unspecified"|clonal_functional_clinical_maf$BIOPSY_LOCATION=="Unknown primary"|clonal_functional_clinical_maf$BIOPSY_LOCATION=="Other",
+                                                       "Unknown",
+                                                       clonal_functional_clinical_maf$BIOPSY_LOCATION)
+clonal_functional_clinical_maf$Location_plot <- ifelse(clonal_functional_clinical_maf$Location_plot=="Lypmh",
+                                                       "Lymph",
+                                                       clonal_functional_clinical_maf$Location_plot)
+
 
 
 ### ... Storing files ----
@@ -49,8 +58,8 @@ write.table(class_df, sprintf('./2wOG_%s_gene-perturbation_%s_%s.tsv', 'PERM', F
 
 
 
-## Odds ratio calculation ----
-### ... All consistent / perturbed genes with all their interactions
+### ... Odds ratio calculation ----
+# All consistent / perturbed genes with all their interactions
 behaviour_model_df <- merge(model_df,class_df[c("Gene","Merged","Behaviour")])
 behaviour_model_df <- behaviour_model_df[!is.na(behaviour_model_df$Behaviour),]
 filtered_clonal_oncogenic_maf <- merge(unique(behaviour_model_df[c("Gene","Tissue","Stage")]),
@@ -65,24 +74,12 @@ clonal_stage_counts <-
             SP=sum(Stage=="Primary"&clonality=="SUBCLONAL")+.5,
             SM=sum(Stage=="Metastasis"&clonality=="SUBCLONAL")+.5)
 
-### ... Only C2 / C3 genes significant tissues, C1 should stay the same 
+# Only C2 / C3 genes significant tissues, C1 should stay the same 
 only_tissue_significants <- behaviour_model_df[c("Gene","Tissue","Stage","SIG","Class")]
 only_tissue_significants <- only_tissue_significants %>% group_by(Gene) %>% mutate(Keep = ifelse(Class%in%c("C2","C3","C4")&SIG==F,F,T))
 only_tissue_significants <- filter(only_tissue_significants,Keep==T)
 
-more_filtered_clonal_oncogenic_maf <- merge(filtered_clonal_oncogenic_maf,
-                                            unique(only_tissue_significants[c("Gene","Tissue","Stage")]),
-                                            by=c("Gene","Tissue","Stage"))
-clonal_stage_counts_sigtissue <-
-  more_filtered_clonal_oncogenic_maf %>% 
-  group_by(Gene) %>% 
-  summarise(CP=sum(Stage=="Primary"&clonality=="CLONAL")+.5,
-            CM=sum(Stage=="Metastasis"&clonality=="CLONAL")+.5,
-            SP=sum(Stage=="Primary"&clonality=="SUBCLONAL")+.5,
-            SM=sum(Stage=="Metastasis"&clonality=="SUBCLONAL")+.5)
-clonal_stage_counts_sigtissue <- merge(clonal_stage_counts_sigtissue,unique(behaviour_model_df[c("Gene","Merged","Behaviour")]))
-
-### ... If we want to only include as C1 the tissue where the c2 or c3 is significant, 
+# If we want to only include as C1 the tissue where the c2 or c3 is significant, 
 only_sig_tissues_significants <- only_tissue_significants %>% group_by(Gene,Tissue) %>%
   mutate(Lab = ifelse(length(unique(Stage))==2,"Y","N"))
 only_sig_tissues_significants <- only_sig_tissues_significants %>% group_by(Gene) %>%
@@ -103,19 +100,7 @@ clonal_stage_counts_sigtissue_sig <- merge(clonal_stage_counts_sigtissue_sig,
 
 
 
-### ... Taking into account the location of the metastatic biopsy ---- 
-clonal_functional_clinical_maf$Location_plot <- ifelse(clonal_functional_clinical_maf$BIOPSY_LOCATION=="Unspecified"|clonal_functional_clinical_maf$BIOPSY_LOCATION=="Unknown primary"|clonal_functional_clinical_maf$BIOPSY_LOCATION=="Other",
-                                                       "Unknown",
-                                                       clonal_functional_clinical_maf$BIOPSY_LOCATION)
-clonal_functional_clinical_maf$Location_plot <- ifelse(clonal_functional_clinical_maf$Location_plot=="Lypmh",
-                                                       "Lymph",
-                                                       clonal_functional_clinical_maf$Location_plot)
-clonal_counts_location_persample <- filter(clonal_functional_clinical_maf,STAGE_PM!="Primary") %>% 
-  group_by(Tumor_Sample_Barcode,CANC_TYPE,Location_plot) %>% 
-  summarise(Clonal_Count=sum(clonality=="CLONAL"),
-            Subclonal_Count=sum(clonality=="SUBCLONAL"),
-            Clonal_Fraction = Clonal_Count/sum(Clonal_Count,Subclonal_Count))
-
+### ... Saving ----
 write.table(clonal_counts_location_persample, 
             sprintf("2wOG_%s_Biopsy-Location-CF_%s_%s.tsv",'PERM',FREQ,SPLITMOD),
             sep="\t", row.names=F, quote=F)

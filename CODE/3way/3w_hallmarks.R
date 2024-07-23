@@ -19,7 +19,7 @@ thr <- 10
 input_genes <- readRDS('./DATA/PROCESSED_DATA/492_input_genes.RDS') # Genes in the maf file
 hallmarks <- read.table('./DATA/PROCESSED_DATA/CELL_CPTAC_Hallmark.txt',
                         sep = '\t', na.strings = '', header = T)
-results <- filter(readRDS(sprintf('./DATA/ANALYSIS_DATA/3way__TG/3wTG_%s_analysis_%s_%s_FDR%s.RDS', FDR, FREQ, SPLITMOD, thr)),
+results <- filter(readRDS(sprintf('./DATA/ANALYSIS_DATA/3way/3wTG_%s_analysis_%s_%s_FDR%s.RDS', FDR, FREQ, SPLITMOD, thr)),
                   SIG_FDR10_3way == T)
 
 
@@ -241,5 +241,5 @@ hallmarks_pair_count$Diff_Pval <- unlist(lapply(hallmarks_pair_count$Hallmark, f
 
 ### ... Saving file ----
 write.table(hallmarks_pair_count,
-            sprintf('./DATA/ANALYSIS_DATA/3way__TG/3wTG_%s_%s_%s_FDR%s_hallmarks.tsv', FDR, FREQ, SPLITMOD, thr),
+            sprintf('./DATA/ANALYSIS_DATA/3way/3wTG_%s_%s_%s_FDR%s_hallmarks.tsv', FDR, FREQ, SPLITMOD, thr),
             sep = '\t', row.names = F, quote = F)

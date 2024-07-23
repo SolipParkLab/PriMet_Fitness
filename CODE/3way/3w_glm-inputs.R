@@ -75,10 +75,10 @@ ready_bm <- unlist(mapply(function(binary_matrix,clinical_table){
 if (!file.exists('./DATA/GLM_INPUTS/')){
   dir.create('./DATA/GLM_INPUTS/')
 }
-if (!file.exists('./DATA/GLM_INPUTS/3way__TG')){
-  dir.create('./DATA/GLM_INPUTS/3way__TG')
+if (!file.exists('./DATA/GLM_INPUTS/3way')){
+  dir.create('./DATA/GLM_INPUTS/3way')
 }
-setwd('./DATA/GLM_INPUTS/3way__TG')
+setwd('./DATA/GLM_INPUTS/3way')
 
 
 
@@ -105,4 +105,4 @@ names(input_files) <- inputnames
 
 
 ### ... Saving files ----
-saveRDS(input_files, sprintf('./3w__TG__glm-inputs_%s_%s.RDS', FREQ, SPLITMOD))
+saveRDS(input_files, sprintf('./3w__glm-inputs_%s_%s.RDS', FREQ, SPLITMOD))

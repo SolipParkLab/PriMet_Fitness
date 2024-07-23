@@ -36,16 +36,10 @@ model_results <- readRDS(sprintf("./DATA/GLM_OUTPUTS/2way__OG/2w__OG__glm-output
 model_inputs <- read.delim(sprintf("./DATA/GLM_INPUTS/2way__OG/2w__OG__glm-inputs_%s_%s.tsv",FREQ,SPLITMOD),
                            sep="\t",
                            header=T)
-color_codes <- read.csv("./DATA/PROCESSED_DATA/p_color-codes_cancer-types.tsv",
-                        sep="\t",
-                        header=T)
 cancgenedf <- read.csv("./DATA/PROCESSED_DATA/p_cancer-gene-list.tsv",
                        sep = "\t",
                        header = TRUE, 
                        stringsAsFactors = FALSE)
-clonal_functional_clinical_maf <- read.delim("./DATA/PROCESSED_DATA/p_clonal-MAF.tsv",
-                                             sep="\t",
-                                             header=T)
 FDR_conversion_table <- read.delim(sprintf("./DATA/ANALYSIS_DATA/2way__OG/2wOG_FDR-conversion-table_%s_%s.tsv",FREQ,SPLITMOD),
                                    sep="\t",
                                    header=T)
@@ -136,20 +130,10 @@ if(grepl("Subtype",SPLITMOD)){
   total[,match(c("PC_FDR10"),names(total))] <- NULL
   }
 total <- bind_rows(total,elim)
+# Correcting estimate
 total$Estimate_plot <- ifelse(total$CNA_type=="Gain",total$Estimate,total$Estimate*(-1))
-total$Log_Pval_max10 <- ifelse(-log(total$P_value,10)>10,10,-log(total$P_value,10))
 total <- merge(total,cancgenedf)
-if(grepl("Tissue",SPLITMOD)){
-  total <- merge(total,unique(color_codes[c("Tissue","Tissue_color")]))
-  total <- total %>%
-    group_by(Tissue,CNA_type,Stage) %>%
-    mutate(N_pairs=n())
-}else if(grepl("Subtype",SPLITMOD)){
-  total <- merge(total,unique(color_codes[c("Subtype","Subtype_color")]))
-  total <- total %>%
-    group_by(Tissue,Subtype,CNA_type,Stage) %>%
-    mutate(N_pairs=n())
-}
+
 # Saving file
 total[c('P_value_temp', 'Estimate', 'Size', 'NTT_Tissue', 'NTT_Subtype', 'Tissue_color', 'N_pairs')] <- NULL
 write.table(total, sprintf("./2wOG_%s_analysis_%s_%s.tsv",'PERM',FREQ,SPLITMOD),

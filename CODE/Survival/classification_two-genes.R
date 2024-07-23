@@ -13,7 +13,8 @@ clinical_data <- read.table("./DATA/PROCESSED_DATA/p_clinical-data.tsv",
                             sep = "\t", header=T)
 clinical_data <- filter(clinical_data,N_ONCOGENIC_ALTERATIONS>0)
 # Sig pairs in 3way model
-two_genes <- filter(readRDS('./DATA/ANALYSIS_DATA/3way__TG/3wTG-PERM_analysis_mf1-cf10_Tissue-Stage-PM_FDR10.RDS'), SIG_FDR10_3way == T)
+# Can change SIG_FDR10_3way == T TO SIG_FDR10_3way == F for non significant pairs
+two_genes <- filter(readRDS('./DATA/ANALYSIS_DATA/3way/3wTG-PERM_analysis_mf1-cf10_Tissue-Stage-PM_FDR10.RDS'), SIG_FDR10_3way == T)
 two_genes <- two_genes[c('Tissue', 'Stage', 'CNA_type', 'Gene_Pair', 'GeneA', 'GeneB')] %>% 
   arrange(Tissue, Stage, CNA_type)
 

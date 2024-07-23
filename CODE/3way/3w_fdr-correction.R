@@ -31,13 +31,13 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 ## Loading files ----
-results_twogenes <- readRDS(sprintf('./DATA/MODEL_OUTPUTS/3way__TG/3w__TG__glm-outputs_%s_%s.RDS', FREQ, SPLITMOD))
+results_twogenes <- readRDS(sprintf('./DATA/MODEL_OUTPUTS/3way/3w__glm-outputs_%s_%s.RDS', FREQ, SPLITMOD))
 color_codes <- read.csv("./DATA/PROCESSED_DATA/p_color-codes_cancer-types.tsv",
                         sep="\t", header=T)
 sig_genes_2way <- read.csv(sprintf("./DATA/ANALYSIS_DATA/2way__OG/2wOG_%s_analysis_%s_%s.tsv",FDR_method,FREQ,SPLITMOD),
                            sep="\t", header=T)
 sig_genes_2way <- filter(sig_genes_2way,get(paste0("SIG_FDR",FDR_2way))==T)
-FDR_conversion_table <- read.delim(sprintf("./DATA/ANALYSIS_DATA/3way__TG/3wTG_FDR-conversion-table_%s_%s.tsv",FREQ,SPLITMOD),
+FDR_conversion_table <- read.delim(sprintf("./DATA/ANALYSIS_DATA/3way/3wTG_FDR-conversion-table_%s_%s.tsv",FREQ,SPLITMOD),
                                    sep="\t", header=T)
 
 

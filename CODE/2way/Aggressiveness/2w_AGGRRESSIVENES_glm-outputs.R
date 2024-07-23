@@ -53,7 +53,26 @@ if (!file.exists('./DATA/GLM_OUTPUTS/')){
 if (!file.exists('./DATA/GLM_OUTPUTS/2way__AGG')){
   dir.create('./DATA/GLM_OUTPUTS/2way__AGG')
 }
-setwd('./DATA/GLM_OUTPUTS/2way__AGG')
-saveRDS(mod_res, sprintf('./2w__AGG__outputs_%s_%s.RDS', FREQ, SPLITMOD))
-write.table(mod_res, sprintf('./2w__AGG__outputs_%s_%s.tsv', FREQ, SPLITMOD),
+saveRDS(mod_res, sprintf('./DATA/GLM_OUTPUTS/2way__AGG/2w__AGG__outputs_%s_%s.RDS', FREQ, SPLITMOD))
+write.table(mod_res, sprintf('./DATA/GLM_OUTPUTS/2way__AGG/2w__AGG__outputs_%s_%s.tsv', FREQ, SPLITMOD),
+            sep="\t", quote=FALSE, row.names = FALSE)
+
+
+
+### ... Correcting the estimate ----
+total <- model_results
+total$Estimate_plot <- ifelse(total$CNA_type=="Gain", total$Estimate, total$Estimate * (-1))
+total[c('Estimate', 'Size')] <- NULL
+
+
+
+### ... Saving
+if (!file.exists('./DATA/ANALYSIS_DATA/')){
+  dir.create('./DATA/ANALYSIS_DATA/')
+}
+if (!file.exists('./DATA/ANALYSIS_DATA/2way__AGG')){
+  dir.create('./DATA/ANALYSIS_DATA/2way__AGG')
+}
+saveRDS(total, sprintf('./DATA/ANALYSIS_DATA/2way__AGG/2wAGG_analysis_%s_%s.RDS', FREQ, SPLITMOD))
+write.table(total, sprintf('./DATA/ANALYSIS_DATA/2way__AGG/2wAGG_analysis_%s_%s.tsv', FREQ, SPLITMOD),
             sep="\t", quote=FALSE, row.names = FALSE)
