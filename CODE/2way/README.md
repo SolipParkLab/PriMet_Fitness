@@ -1,12 +1,12 @@
 ## 2 way code
 
-In this folder you can find all the scripts to run the 2-way models, including oncogenic (across cancer types and subtypes), treatment, aggressiveness (number of metastasis) and confounding factors models.
+This code allows to run the 2-way models, including oncogenic (across cancer types and subtypes), treatment and confounding factors models.
 
 - glm-inputs: code to compute the inputs for the log-linear regression models from the binary matrices.
 
 - glm-outputs: code to run the log-linear regression models.
 
-- Permut: code to run the permutation matrices, obtain the number of false significant pairs and compute the average FDR.
+- Permut: code to run the permutation matrices, run the log-linear regression models using the permuted matrices, obtain the number of false significant pairs and compute the average FDR as described in the Methods section.
 
 - fdr-class (if applied): false discovery rate correction of the log-linear regression *P*-value based on the permuted counts and classification of tested genes as described in Park *et al* (2019).
 

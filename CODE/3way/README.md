@@ -1,6 +1,6 @@
 ## 3 way code
 
-In this folder you can find all the scripts to run the 3-way log-linear regression models.
+The code here allows to run the 3-way log-linear regression models.
 
 - glm-inputs: code to compute the inputs for the log-linear regression models from the binary matrices.
 
