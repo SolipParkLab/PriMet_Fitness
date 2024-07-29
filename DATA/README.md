@@ -1,0 +1,1 @@
+Input counts for 2-way a 3-way log linear regression models. Additionally, we provide the classification of all the genes tested across primary and metastatic tumors, including the 2 different classifications of primary samples (all primary samples together or classified whether the patients developed metastasis or not).
