@@ -2,7 +2,7 @@
 
 This code allows to run the 2-way models, including oncogenic (across cancer types and subtypes), treatment and confounding factors models.
 
-- glm-inputs: code to compute the inputs for the log-linear regression models from the binary matrices. Four types of samples are required: (i) NoMut_WT, the number of samples that have neither mutation nor CNAs; (ii) Mut_WT, the number of samples with only mutations and no CNAs; (iii) NoMut_CNA, the number of samples with only CNAs and no mutations, and (iv) Mut_CNA, the number of samples with both mutation and CNAs.
+- glm-inputs: code to compute the inputs for the log-linear regression models from the binary matrices. Four types of sample counts are obtained.
 
 - glm-outputs: code to run the log-linear regression models.
 

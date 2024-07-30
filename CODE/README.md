@@ -8,4 +8,4 @@
 
 - *Survival* folder has the code to classify the samples according their mutation status based on the significant and non-sifnificant 2-way and 3-way interactions and run the Cox regression models.
 
-The additional script is necessary, as it includes functions used by the other scripts.
+The additional script is necessary as it includes functions used by the other scripts.

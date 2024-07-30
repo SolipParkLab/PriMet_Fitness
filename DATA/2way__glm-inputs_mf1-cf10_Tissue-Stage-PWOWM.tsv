@@ -1,4 +1,4 @@
-Tissue	Stage	Gene	Function	MutFreq	LossFreq	GainFreq	NoMutLoss	MutLoss	NoMutWT	MutWT	NoMutGain	MutGain
+Tissue	State	Gene	Function	MutFreq	LossFreq	GainFreq	NoMutLoss	MutLoss	NoMutWT	MutWT	NoMutGain	MutGain
 Breast	Primary_WO_Metastasis	AKT1	OG	0.0454545454545455	0.109427609427609	0.0471380471380471	66	1	480	23	24	6
 Breast	Primary_W_Metastasis	AKT1	OG	0.047071129707113	0.156903765690377	0.0920502092050209	149	3	688	32	77	13
 Breast	Metastasis	AKT1	OG	0.0497607655502392	0.166507177033493	0.108133971291866	174	2	718	42	104	11

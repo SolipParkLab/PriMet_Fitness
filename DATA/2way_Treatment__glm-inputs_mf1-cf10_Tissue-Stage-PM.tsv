@@ -1,4 +1,4 @@
-Tissue	Stage	Treatment	Gene	MutFreq	LossFreq	GainFreq	NoMutLoss	MutLoss	NoMutWT	MutWT	NoMutGain	MutGain
+Tissue	State	Treatment	Gene	MutFreq	LossFreq	GainFreq	NoMutLoss	MutLoss	NoMutWT	MutWT	NoMutGain	MutGain
 Breast	Primary	Treatment	AKT1	0.0691823899371069	0.125786163522013	0.0440251572327044	21	1	124	10	6	3
 Breast	Primary	Treatment	ARID1A	0.0188679245283019	0.283018867924528	0.0188679245283019	43	4	112	1	4	1
 Breast	Primary	Treatment	ARID1B	0.0125786163522013	0.251572327044025	0.0566037735849057	41	1	109	3	10	1
