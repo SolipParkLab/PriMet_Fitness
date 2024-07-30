@@ -26,13 +26,13 @@ oncogenic_maf <- merge(oncogenic_maf,
                        clinical_data,
                        by.x="Tumor_Sample_Barcode",
                        by.y = "SAMPLE_ID")
-matnames <- list.files(path="./DATA/PROCESSED_DATA/SP_processed_cna_matrices/",
+matnames <- list.files(path="./DATA/PROCESSED_DATA/processed_cna_matrices/",
                        pattern="cnv_data*")
 cancernames <- str_remove_all(str_remove_all(matnames,"cnv_data_cna_hg19_abs0.2_"),".txt")
 cancernames <- str_replace_all(cancernames," ","-")
 # CNV matrices
 cnv_mats <- lapply(matnames,function(x) {
-  cm_mat <- read.csv(sprintf("./DATA/PROCESSED_DATA/SP_processed_cna_matrices/%s",x),
+  cm_mat <- read.csv(sprintf("./DATA/PROCESSED_DATA/processed_cna_matrices/%s",x),
                      sep = "\t",
                      header = TRUE)
   rownames(cm_mat) <- cm_mat$Sample

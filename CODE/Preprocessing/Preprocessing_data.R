@@ -29,18 +29,6 @@ write.table(cancgenedf[c(1,4)], "./DATA/PROCESSED_DATA/p_cancer-gene-list.tsv",
 
 
 
-### ... Color codes by cancer type (Tissue) and cancer subtype ----
-suppl_table_1_1 <- read_xlsx("./DATA/RAW_DATA/msk_met_2021/supplementary_data_paper/1-s2.0-S0092867422000034-mmc1.xlsx",
-                             sheet = 1, startRow = 2, colNames = T)
-color_codes <- unique(suppl_table_1_1[c("curated_subtype_abbr","organ_system","color_organ_system","color_subtype")])
-names(color_codes) <- c("Subtype","Tissue","Tissue_color","Subtype_color")
-color_codes$Subtype <- str_replace_all(color_codes$Subtype," ","-")
-color_codes$Tissue <- str_replace_all(color_codes$Tissue," ","-")
-write.table(color_codes,"./DATA/PROCESSED_DATA/p_color_codes.tsv",
-            sep = "\t", row.names = F, quote = F)
-
-
-
 ### ... Gene Name Conversion Table Preparation ----
 mut_annot_data <- read.delim("./DATA/PROCESSED_DATA/p_OKB-annotated_MAF_data_mutations.oncokb.txt",
                              sep="\t")
@@ -86,12 +74,12 @@ write.table(oncogenic_maf, "./DATA/PROCESSED_DATA/p_oncogenic-MAF.tsv",
             sep="\t", quote=FALSE, row.names = FALSE)
 # Raw Binary Matrix Generation ----
 oncogenic_maf <- merge(oncogenic_maf,clinical_data,by.x="Tumor_Sample_Barcode","SAMPLE_ID")
-matnames <- list.files(path="./DATA/PROCESSED_DATA/SP_processed_cna_matrices/",
+matnames <- list.files(path="./DATA/PROCESSED_DATA/processed_cna_matrices/",
                        pattern="cnv_data*")
 cancernames <- str_remove_all(str_remove_all(matnames,"cnv_data_cna_hg19_abs0.2_"),".txt")
 cancernames <- str_replace_all(cancernames," ","-")
 cnv_mats <- lapply(matnames,function(x) {
-  cm_mat <- read.csv(sprintf("./DATA/PROCESSED_DATA/SP_processed_cna_matrices/%s",x),
+  cm_mat <- read.csv(sprintf("./DATA/PROCESSED_DATA/processed_cna_matrices/%s",x),
                      sep = "\t",
                      header = TRUE)
   rownames(cm_mat) <- cm_mat$Sample
