@@ -1,0 +1,1 @@
+Sample counts for 2-way and 3-way log-linear regression models.
