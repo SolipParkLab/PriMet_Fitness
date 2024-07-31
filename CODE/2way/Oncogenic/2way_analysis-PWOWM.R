@@ -14,7 +14,9 @@ library(ggplot2)
 
 
 ### ... Input files ----
+# Results from 2-way across primary and metastasis --> SPLITMOD = Tissue-Stage-PM
 pm <- read.delim('./DATA/ANALYSIS_DATA/2way/2way_PERM_analysis_mf1-cf10_Tissue-Stage-PM.tsv', sep = '\t')
+# Results from 2-way classifying primary samples --> SPLITMOD = Tissue-Stage-PWOWM
 pwowm <- read.delim('./DATA/ANALYSIS_DATA/2way/2way_PERM_analysis_mf1-cf10_Tissue-Stage-PWOWM.tsv', sep = '\t')
 
 

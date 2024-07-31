@@ -25,8 +25,8 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 
-### ... Uploading files ----
-model_inputs <- readRDS(sprintf("./DATA/GLM_INPUTS/2way__Oncogenic/2way__glm-inputs_%s_%s.RDS",FREQ,SPLITMOD))
+### ... Loading glm inputs ----
+model_inputs <- readRDS(sprintf("./DATA/GLM_INPUTS/2way/2way__glm-inputs_%s_%s.RDS",FREQ,SPLITMOD))
 
 
 

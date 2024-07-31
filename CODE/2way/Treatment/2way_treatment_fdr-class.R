@@ -29,10 +29,13 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 
-## Uploading files ----
+### ... Loading files ----
+# Glm outputs
 model_results_df <- readRDS(sprintf("./DATA/GLM_OUTPUTS/2way_Treatment/2way_Treatment__glm-outputs_%s_%s.RDS", FREQ, SPLITMOD))
+# Cancer gene list with gene function in tumors
 cancgenedf <- read.csv("./DATA/PROCESSED_DATA/p_cancer-gene-list.tsv", 
                        sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+# FDR conversion table obtained from permutations
 FDR_conversion_table <- read.delim(sprintf("./DATA/ANALYSIS_DATA/2way_Treatment/2way_Treatment_FDR-conversion-table_%s_%s.tsv",FREQ,SPLITMOD),
                                    sep="\t", header=T)
 
@@ -87,6 +90,6 @@ total$Estimate_plot <- ifelse(total$CNA_type=="Gain",total$Estimate,total$Estima
 total[c('Estimate', 'P_value_temp', 'Size')] <- NULL
 # Saving table
 write.table(total,
-            sprintf("2wT_%s_analysis_%s_%s.tsv",'PERM',FREQ,SPLITMOD),
+            sprintf("2way_Treatment_%s_analysis_%s_%s.tsv",'PERM',FREQ,SPLITMOD),
             sep="\t",
             row.names = FALSE)

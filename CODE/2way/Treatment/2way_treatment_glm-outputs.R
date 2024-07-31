@@ -20,12 +20,12 @@ FREQ <- paste0("mf",
                as.numeric(freqcnv_threshold)*100)
 
 
-## Loading functions ----
+### ... Loading functions ----
 source("./CODE/common_reg-model-functions.R",local=T)
 
 
 
-## Uploading files ----
+### ... Loading glm inputs ----
 model_inputs <- readRDS(sprintf("./DATA/GLM_INPUTS/2way_Treatment/2way_Treatment__glm-inputs_%s_%s.RDS",FREQ,SPLITMOD))
 
 

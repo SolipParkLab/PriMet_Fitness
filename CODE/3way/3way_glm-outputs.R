@@ -29,9 +29,11 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 ### ... Loading files ----
+# Significant genes from 2-way (n =1 24)
 sig_genes_2way <- read.csv(sprintf("./DATA/ANALYSIS_DATA/2way/2way_%s_analysis_%s_%s.tsv", 'PERM', FREQ, SPLITMOD),
                            sep="\t", header=T)
 sig_genes_2way <- filter(sig_genes_2way,get(paste0("SIG_FDR", FDR_2way))==T)
+# Glm inputs
 inputs_twogenes <- readRDS(sprintf('./DATA/GLM_INPUTS/3way/3way__glm-inputs_%s_%s.RDS', FREQ, SPLITMOD))
 
 

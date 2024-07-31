@@ -15,11 +15,11 @@ source('./CODE/common_reg-model-functions.R')
 
 
 ### ... Read and process input files ----
-# Keep significant pairs only
+# Keep significant pairs only from treatment results
 t_res <- read.delim('./DATA/ANALYSIS_DATA/2way_Treatment/2way_Treatment_PERM_analysis_mf1-cf10_Tissue-Stage-PM.tsv', sep = '\t')
 t_res_sig <- filter(t_res, SIG_FDR10 == T)
 basic <- t_res_sig[c('Gene', 'Tissue', 'Stage', 'Treatment', 'CNA_type', 'P_value', 'Estimate_plot')]
-# Model inputs
+# Glm inputs
 model_inputs_df <- read.delim('./DATA/GLM_INPUTS/2way_Treatment/2way_Treatment__glm-inputs_mf1-cf10_Tissue-Stage-PM.tsv', sep = '\t')
 
 

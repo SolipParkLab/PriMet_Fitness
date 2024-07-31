@@ -6,39 +6,21 @@ library(purrr)
 
 
 ### ... Input files
-# Binary matrices
-binary_mats <- readRDS("./DATA/PROCESSED_DATA/001_oncokb_binary_matrixes.RDS")
-# Clinical data
-clinical_data <- read.table("./DATA/PROCESSED_DATA/p_clinical-data.tsv",
-                            sep = "\t", header=T)
-clinical_data <- filter(clinical_data,N_ONCOGENIC_ALTERATIONS>0)
-# Sig pairs in 3way model
-two_way <- readRDS('./DATA/ANALYSIS_DATA/2way__OG/2wOG_PERM_analysis_mf1-cf10_Tissue-Stage-PM.RDS')
+# All pairs in 2-way model
+two_way <- readRDS('./DATA/ANALYSIS_DATA/2way/2way_PERM_analysis_mf1-cf10_Tissue-Stage-PM.RDS')
 two_way <- two_way[c('Tissue', 'Stage', 'CNA_type', 'Gene', 'SIG_FDR10')] %>% 
   arrange(Tissue, Stage, CNA_type)
+# Loading binary matrix
+binary_matrix <- read.delim('./DATA/Binary_Matrix.tsv', check.names = F)
+rownames(binary_matrix) <- binary_matrix$SAMPLE_ID
 
 
 
-### ... Subsetting clinical data according to model ----
-model_split_data <- c("CANC_TYPE","STAGE_PM")
-clinical_data <- clinical_data %>%
-  group_by_at(model_split_data) %>%
-  mutate(G = cur_group_id(),
-         name = paste(CANC_TYPE,STAGE_PM,sep="."))
-
-
-
-### ... Subsetting matrixes according to model ----
-ready_bm <- unlist(mapply(function(binary_matrix,clinical_table){
-  bm <- subset(binary_matrix,rownames(binary_matrix)%in%clinical_table$SAMPLE_ID)
-  bm <- merge(bm,clinical_table[c("SAMPLE_ID","name")],by.x="row.names",by.y="SAMPLE_ID")
-  rownames(bm) <- bm$Row.names
-  bm$Row.names <- NULL
-  split_bm <- split(bm[1:(ncol(bm)-1)],bm$name)
-  return(split_bm)},
-  unname(binary_mats),
-  split(clinical_data,clinical_data$CANC_TYPE),
-  SIMPLIFY=F),recursive=F)
+### ... Subsetting matrix according to model ----
+binary_matrix <- binary_matrix %>% 
+	mutate(splitmod = paste(CANC_TYPE, STAGE_PM, sep = '.'))
+binary_matrix <- binary_matrix[,c("splitmod", colnames(binary_matrix)[grepl('_mutation|_Gain|_Loss', colnames(binary_matrix))])]
+ready_bm <- split(binary_matrix[,c(2:ncol(binary_matrix))], binary_matrix$splitmod)
 
 
 
@@ -63,7 +45,7 @@ classification_2way <- classification_2way %>% reduce(full_join, by = 'SAMPLE_ID
 
 
 ### ... Adding this classification to the clinical data
-full_clinical <- read.delim('./DATA/PROCESSED_DATA/p_clinical-data.tsv', sep = '\t')
+full_clinical <- read.delim('./DATA/surv-clinical-data.tsv', sep = '\t')
 full_clinical <- merge(full_clinical,
                        classification_2way,
                        by = 'SAMPLE_ID',
