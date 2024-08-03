@@ -57,7 +57,7 @@ raw_binary_matrixes_list <- lapply(names(data_list),function(tiss){
   mutGenes <- unique(sort(mutated_genes_in_samples$Gene))
   mutated_genes_in_samples$Gene <- paste0(mutated_genes_in_samples$Gene,"_",mutated_genes_in_samples$HGVSp_Short,"_mutation")
   mutated_genes_in_samples$HGVSp_Short <- NULL
-  ### ... Storing SP mutcnv matrix for the correspondent tissue
+  ### ... Storing mutcnv matrix for the correspondent tissue
   cnv_df <- cnv_mats[[tiss]]
   ### ... Elongating matrix (from wide to long)
   cnv_df_long <- cnv_df %>%

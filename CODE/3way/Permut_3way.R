@@ -32,7 +32,9 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 ##### 1. RUNNING 3WAY MODEL WITH TWO-GENES #####
 ### ... Loading files ----
+# Permuted matrices
 permuted_matrixes <- readRDS(sprintf("./DATA/PROCESSED_DATA/PERMUTED_matrixes_%s.RDS",SPLITMOD))
+# Glm_outputs from 3-way
 real_results_twogenes <- readRDS(sprintf("./DATA/ANALYSIS_DATA/3way/3way__glm-outputs_%s_%s.RDS", FREQ, SPLITMOD))
 
 

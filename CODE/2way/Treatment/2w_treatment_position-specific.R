@@ -10,17 +10,18 @@ source('./CODE/common_reg-model-functions.R')
 
 
 ### ... Parameter definition ----
-freqmut_threshold <- "0.005"
+freqmut_threshold <- "0.01"
 freqcnv_threshold <- "0.10"
 
 
 
 ### ... Uploading input files ----
 binary_mats <- readRDS("./DATA/PROCESSED_DATA/Pos-Specific_oncokb_binary-matrices.RDS")
+# Clinical data
 clinical_data <- read.table("./DATA/PROCESSED_DATA/p_clinical-data.tsv",
                             sep = "\t", header=T)
 # Treatment results
-treat_res_sig <- filter(read.delim('./DATA/ANALYSIS_DATA/2way__T/2wT_PERM_analysis_mf1-cf10_Tissue-Stage-PM.tsv', sep = '\t'), SIG_FDR10 == T)
+treat_res_sig <- filter(read.delim('./DATA/ANALYSIS_DATA/2way_Treatment/2way_Treatment_PERM_analysis_mf1-cf10_Tissue-Stage-PM.tsv', sep = '\t'), SIG_FDR10 == T)
 treat_res_sig <- unique(treat_res_sig[c('Gene', 'Tissue', 'Stage', 'Treatment')])
 
 
@@ -133,12 +134,12 @@ model_inputs_subset <- lapply(ready_bm_subset, pos_specific_inputs, freqmut_thre
 model_inputs_df_subset <- map_df(model_inputs_subset, ~as.data.frame(.x), .id="id")
 model_inputs_df_subset[c("Tissue","Subtype","Stage","Treatment")] <- str_split_fixed(model_inputs_df_subset$id,"\\.",4)
 model_inputs_df_subset$id <- NULL
-saveRDS(model_inputs_subset, sprintf('./DATA/GLM_INPUTS/2way__T/2w__T__glm-inputs_Pos-Specific_%s_%s.RDS', 'mf05-cf10', 'Tissue-Stage-PM'))
+saveRDS(model_inputs_subset, sprintf('./DATA/GLM_INPUTS/2way_Treatment/2way_Treatment__glm-inputs_Pos-Specific_%s_%s.RDS', 'mf05-cf10', 'Tissue-Stage-PM'))
 
 
 
 ### ... Computing outputs ----
-model_inputs <- readRDS(sprintf('./DATA/GLM_INPUTS/2way__T/2w__T__glm-inputs_Pos-Specific_%s_%s.RDS', 'mf05-cf10', 'Tissue-Stage-PM'))
+model_inputs <- readRDS(sprintf('./DATA/GLM_INPUTS/2way_Treatment/2way_Treatment__glm-inputs_Pos-Specific_%s_%s.RDS', 'mf05-cf10', 'Tissue-Stage-PM'))
 # Function to create result table for the 2way model 
 pos_specific_results <- function(df) {
   if(is.null(df)){return(NULL)}
@@ -186,8 +187,8 @@ model_results_df <- merge(model_results_df,
                           model_inputs_df_subset[c("Gene", "Alteration","Tissue","Subtype","Stage","Treatment","MutFreq","LossFreq","GainFreq","Size")],
                           by = intersect(names(model_results_df),
                                          c("Gene", "Alteration", "Tissue","Subtype","Stage","Treatment","MutFreq","LossFreq","GainFreq")))
-saveRDS(model_results_df, sprintf('./DATA/GLM_OUTPUTS/2way__T/2w__T__glm-outputs_Pos-Specific_%s_%s.RDS', 'mf05-cf10', 'Tissue-Stage-PM'))
-write.table(model_results_df, sprintf('./DATA/GLM_OUTPUTS/2way__T/2w__T__glm-outputs_Pos-Specific_%s_%s.tsv', 'mf05-cf10', 'Tissue-Stage-PM'),
+saveRDS(model_results_df, sprintf('./DATA/GLM_OUTPUTS/2way_Treatment/2way_Treatment__glm-outputs_Pos-Specific_%s_%s.RDS', 'mf05-cf10', 'Tissue-Stage-PM'))
+write.table(model_results_df, sprintf('./DATA/GLM_OUTPUTS/2way_Treatment/2way_Treatment__glm-outputs_Pos-Specific_%s_%s.tsv', 'mf05-cf10', 'Tissue-Stage-PM'),
             sep = '\t', row.names = F, quote = F)
 
 
@@ -198,5 +199,5 @@ total$Estimate_plot <- ifelse(total$CNA_type == 'Gain', total$Estimate, total$Es
 # Removing some columns we don't need
 total[c('Estimate', 'Subtype', 'Size')] <- NULL
 # Saving
-write.table(total, sprintf('./DATA/ANALYSIS_DATA/2way__T/2wT_analysis_Pos-Specific_%s_%s.tsv', 'mf05-cf10', 'Tissue-Stage-PM'),
+write.table(total, sprintf('./DATA/ANALYSIS_DATA/2way_Treatment/2way_Treatment_analysis_Pos-Specific_%s_%s.tsv', 'mf05-cf10', 'Tissue-Stage-PM'),
             sep = '\t', row.names = F, quote = F)

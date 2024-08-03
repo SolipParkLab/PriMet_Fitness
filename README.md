@@ -2,7 +2,7 @@
 
 **CODE** includes the methods for analyzing co-occurrences between mutations and CNAs within a cancer gene using log-linear regression models. We used log-linear regression models with Poisson functions to determine the significance of these co-occurrences.
 
-In **DATA**, we provide the input files for the log-linear regression models.
+In **DATA**, we provide files (or their source) necessary to run the scripts and the input files for the log-linear regression models.
 
 For the 2-way models, four types of sample counts are required:
 1. NoMut_WT: Samples with neither mutation nor CNAs.

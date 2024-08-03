@@ -31,59 +31,24 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 ##### 1. CREATING PERMUTATION MATRIXES #####
-### ... Uploading files ----
-binary_mats <- readRDS("./DATA/PROCESSED_DATA/001_oncokb_binary_matrixes.RDS")
-clinical_data <- read.table("./DATA/PROCESSED_DATA/p_clinical-data.tsv",
-                            sep = "\t", header=T)
-
-
-
-### ... Subsetting clinical data according to model ----
-clinical_data <- filter(clinical_data,N_ONCOGENIC_ALTERATIONS>0)
-if (SPLITMOD == "Tissue"){
-  model_split_data <- "CANC_TYPE"
-}else if (SPLITMOD == "Subtype"){
-  model_split_data <- c("CANC_TYPE","CANC_SUBTYPE")
-}else if (SPLITMOD == "Tissue-Stage-PM"){
-  model_split_data <- c("CANC_TYPE","STAGE_PM")
-}else if (SPLITMOD == "Subtype-Stage-PM"){
-  model_split_data <- c("CANC_TYPE","CANC_SUBTYPE","STAGE_PM")
-}else if (SPLITMOD == "Tissue-Stage-PWOWM"){
-  model_split_data <- c("CANC_TYPE","STAGE_PWOWM")
-}else if (SPLITMOD == "Subtype-Stage-PWOWM"){
-  model_split_data <- c("CANC_TYPE","CANC_SUBTYPE","STAGE_PWOWM")
-}
-clinical_data <-
-  clinical_data %>%
-  group_by_at(model_split_data) %>%
-  mutate(G = cur_group_id(),
-         name = ifelse(SPLITMOD == "Subtype-Stage-PWOWM",paste(CANC_TYPE,CANC_SUBTYPE,STAGE_PWOWM,sep="."),
-                       ifelse(SPLITMOD == "Subtype-Stage-PM",paste(CANC_TYPE,CANC_SUBTYPE,STAGE_PM,sep="."),
-                              ifelse(SPLITMOD == "Tissue-Stage-PWOWM",paste(CANC_TYPE,NA,STAGE_PWOWM,sep="."),
-                                     ifelse(SPLITMOD == "Tissue-Stage-PM",paste(CANC_TYPE,NA,STAGE_PM,sep="."),
-                                            ifelse(SPLITMOD == "Subtype",paste(CANC_TYPE,CANC_SUBTYPE,NA,sep="."),
-                                                   paste(CANC_TYPE,NA,NA,sep=".")))))))
+### ... Loading binary matrix ----
+binary_matrix <- read.delim('./DATA/Binary_Matrix.tsv', check.names = F)
+binary_matrix_reduced <- binary_matrix
+rownames(binary_matrix_reduced) <- binary_matrix_reduced$SAMPLE_ID
 
 
 
 ### ... Subsetting matrixes according to model ----
-ready_bm <- unlist(
-  mapply(function(binary_matrix,clinical_table){
-    bm <- subset(binary_matrix,
-                 rownames(binary_matrix)%in%clinical_table$SAMPLE_ID)
-    bm <- merge(bm,
-                clinical_table[c("SAMPLE_ID","name")],
-                by.x="row.names",
-                by.y="SAMPLE_ID")
-    rownames(bm) <- bm$Row.names
-    bm$Row.names <- NULL
-    split_bm <- split(bm[1:(ncol(bm)-1)],bm$name)
-    return(split_bm)
-    },
-    unname(binary_mats),
-    split(clinical_data,clinical_data$CANC_TYPE),
-    SIMPLIFY=F),
-  recursive=F)
+if (SPLITMOD == "Tissue-Stage-PM"){binary_matrix_reduced <- binary_matrix_reduced %>% 
+	mutate(splitmod = paste(CANC_TYPE, NA, STAGE_PM, sep = '.'))
+}else if (SPLITMOD == "Subtype-Stage-PM"){binary_matrix_reduced <- binary_matrix_reduced %>% 
+	mutate(splitmod = paste(CANC_TYPE, CANC_SUBTYPE, STAGE_PM, sep = '.'))
+}else if (SPLITMOD == "Tissue-Stage-PWOWM"){binary_matrix_reduced <- binary_matrix_reduced %>% 
+	mutate(splitmod = paste(CANC_TYPE, NA, STAGE_PWOWM, sep = '.'))
+}else if (SPLITMOD == "Subtype-Stage-PWOWM"){binary_matrix_reduced <- binary_matrix_reduced %>% 
+	mutate(splitmod = paste(CANC_TYPE, CANC_SUBTYPE, STAGE_PWOWM, sep = '.'))}
+binary_matrix_reduced <- binary_matrix_reduced[,c("splitmod", colnames(binary_matrix_reduced)[grepl('_mutation|_Gain|_Loss', colnames(binary_matrix_reduced))])]
+ready_bm <- split(binary_matrix_reduced[,c(2:ncol(binary_matrix_reduced))], binary_matrix_reduced$splitmod)
 
 
 
@@ -232,9 +197,7 @@ saveRDS(permuted_outputs,
 
 
 ### 3. COUNTING REAL SIGNIFICANTS #####
-clinical_data <- read.table("./DATA/PROCESSED_DATA/p_clinical-data.tsv",
-                            sep = "\t", header=T)
-subtypes <- setNames(unique(clinical_data[c("CANC_TYPE","CANC_SUBTYPE")]),
+subtypes <- setNames(unique(binary_matrix[c("CANC_TYPE","CANC_SUBTYPE")]),
                      c("Tissue","Subtype"))
 real_results <- read.delim(sprintf("./DATA/ANALYSIS_DATA/2way/2way_PERM_analysis_%s_%s.tsv", FREQ, SPLITMOD),
                            sep="\t", header=T)
@@ -312,9 +275,7 @@ write.table(count_real_significants, sprintf("./DATA/ANALYSIS_DATA/2way_permutat
 ### This part is run in parallel 1:100 times #####
 ### ... Uploading files ----
 permuted_results_all <- readRDS(sprintf("./DATA/ANALYSIS_DATA/2way/2way_permutation_outputs_%s_%s.RDS", FREQ, SPLITMOD))
-clinical_data <- read.table("./DATA/PROCESSED_DATA/p_clinical-data.tsv",
-                            sep = "\t", header=T)
-subtypes <- setNames(unique(clinical_data[c("CANC_TYPE","CANC_SUBTYPE")]),
+subtypes <- setNames(unique(binary_matrix[c("CANC_TYPE","CANC_SUBTYPE")]),
                      c("Tissue","Subtype"))
 permutation <- args[2]
 print(permutation)

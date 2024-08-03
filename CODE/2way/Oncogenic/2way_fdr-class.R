@@ -32,14 +32,14 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 ### ... Uploading files ----
+# Glm output file
 model_results <- readRDS(sprintf("./DATA/GLM_OUTPUTS/2way/2way__glm-outputs_%s_%s.RDS",FREQ,SPLITMOD))
-model_inputs <- read.delim(sprintf("./DATA/GLM_INPUTS/2way/2way__glm-inputs_%s_%s.tsv",FREQ,SPLITMOD),
-                           sep="\t",
-                           header=T)
+# Cancer gene list with gene function in tumors
 cancgenedf <- read.csv("./DATA/PROCESSED_DATA/p_cancer-gene-list.tsv",
                        sep = "\t",
                        header = TRUE, 
                        stringsAsFactors = FALSE)
+# FDR conversion table obtained from permutations
 FDR_conversion_table <- read.delim(sprintf("./DATA/ANALYSIS_DATA/2way/2way_FDR-conversion-table_%s_%s.tsv",FREQ,SPLITMOD),
                                    sep="\t",
                                    header=T)

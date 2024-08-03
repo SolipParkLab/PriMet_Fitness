@@ -30,6 +30,7 @@ write.table(cancgenedf[c(1,4)], "./DATA/PROCESSED_DATA/p_cancer-gene-list.tsv",
 
 
 ### ... Gene Name Conversion Table Preparation ----
+# cBioPortal data annotated with oncoKB
 mut_annot_data <- read.delim("./DATA/PROCESSED_DATA/p_OKB-annotated_MAF_data_mutations.oncokb.txt",
                              sep="\t")
 mut_annot_reduced <- unique(mut_annot_data[c("Hugo_Symbol","GENE_IN_ONCOKB")])
@@ -51,10 +52,13 @@ write.table(conversion_df, "./DATA/PROCESSED_DATA/p_gene-names_conversion_table.
 
 
 ### ... Binary matrix creation for oncogenic alterations ----
+# Maf annotated with oncoKB.
 mut_annot_data <- read.delim("./DATA/PROCESSED_DATA/p_OKB-annotated_MAF_data_mutations.oncokb.txt",
                              sep="\t")
+# Conversion table created before in this script.
 conversion_df <- read.delim("./DATA/PROCESSED_DATA/p_gene-names_conversion_table.tsv",
                             sep="\t")
+# Raw clinical data table, downloaded from cBioPortal.
 clinical_data <- read.table("./DATA/RAW_DATA/msk_met_2021/data_clinical_sample.txt",
                             sep="\t",
                             header=T)[c("SAMPLE_ID","ORGAN_SYSTEM", "SUBTYPE_ABBREVIATION", "SAMPLE_TYPE", "METASTATIC_SITE")]
@@ -167,6 +171,7 @@ saveRDS(raw_binary_matrixes_list,
 
 
 ### ... Binary matrix filtering by genes in OncoKB ----
+# List with genes in oncoKB, created before.
 cancgenedf <- read.csv("./DATA/PROCESSED_DATA/p_cancer-gene-list.tsv",
                        sep = "\t", header = TRUE, stringsAsFactors = FALSE)
 raw_binary_matrixes_list <- readRDS("./DATA/PROCESSED_DATA/000_raw_binary_matrixes.RDS")
@@ -181,20 +186,20 @@ saveRDS(oncokb_binary_matrixes_list,
 ### .... Clinical data table cleaning, modifying, ----
 ## Adding information of use for all the models 
 ## STAGE_PWOWM, TREATMENT, METASTATIC AGGRESSIVENESS (MET_COUNT), 
-## METASTATIC AGGRESSIVENESS (TIMING)
+## METASTATIC AGGRESSIVENESS (TIMING), from cBioPortal.
 clinical_data <- read.table("./DATA/RAW_DATA/msk_met_2021/data_clinical_sample.txt",
                             sep="\t",
                             header=T)
-# For treatment information 
+# For treatment information, Supplementary Table 1B of MSK-MET publication.
 suppl_table_1_2 <- read.xlsx("./DATA/RAW_DATA/msk_met_2021/supplementary_data_paper/1-s2.0-S0092867422000034-mmc1.xlsx",
                              sheet = 2, startRow = 2, colNames = T)
-# for timing of metastases information
+# for timing of metastases information, from cBioPortal.
 diagnosis_data <- read.table("./DATA/RAW_DATA/msk_met_2021/data_timeline_diagnosis.txt",
                              sep="\t", header=T)
-# For age at diagnosis 
+# For age at diagnosis, from cBioPortal.
 patient_data <- read.table("./DATA/RAW_DATA/msk_met_2021/data_clinical_patient.txt",
                            sep="\t", header=T)
-# For metastatic biopsy location
+# For metastatic biopsy location, Supplementary Table 1C of MSK-MET publication.
 suppl_table_1_3 <- read.xlsx("./DATA/RAW_DATA/msk_met_2021/supplementary_data_paper/1-s2.0-S0092867422000034-mmc1.xlsx",
                              sheet = 3, startRow = 2, colNames = T)
 ## For number of alterations per sample
@@ -311,7 +316,7 @@ clean_clinical_data <- merge(clean_clinical_data,patient_data[c("SAMPLE_ID","AGE
 
 
 
-## Creating binary matrixes with CLONALITY INFORMATION ----
+### ... Creating maf with CLONALITY INFORMATION ----
 maf <- read.delim("./DATA/RAW_DATA/MSK_MET_msk_impact_facets_annotated.ccf.maf",
                   sep="\t", header=T)
 conversion_df <- read.delim("./DATA/PROCESSED_DATA/p_gene-names_conversion_table.tsv",
@@ -335,6 +340,9 @@ clonal_maf <- filter(oncogenic_maf,clonality=="CLONAL"|clonality=="SUBCLONAL")
 clonal_functional_maf <- filter(clonal_maf,Hugo_Symbol%in%cancgenedf$Gene)
 clonal_functional_clinical_maf <- merge(clonal_functional_maf,clean_clinical_data,by.x="Tumor_Sample_Barcode",by.y="SAMPLE_ID",all.x=T)
 clonal_functional_clinical_maf <- merge(clonal_functional_clinical_maf,cancgenedf,by.x="Hugo_Symbol",by.y="Gene",all.x=T)
+write.table(clonal_functional_clinical_maf, './DATA/PROCESSED_DATA/p-clonal-functional-clinical-maf.tsv',
+            sep = '\t', row.names = F, quote = F)
+
 
 maf_for_models <- unique(clonal_functional_clinical_maf[c("Tumor_Sample_Barcode","STAGE_PM","Function",
                                                           "Hugo_Symbol","clonality","CANC_TYPE","TREATMENT")])
@@ -392,73 +400,6 @@ clonal_fraction_bytissue <- clonal_fraction_bytissue %>%
          CF_Model.Variants_wStage = sum(Model.Variants[Clonality=="CLONAL"])/sum(Model.Variants))
 write.table(clonal_fraction_bytissue, "./DATA/PROCESSED_DATA/p_clonality_by-tissue.tsv",
             sep="\t", quote=F, row.names=F)
-
-
-
-## Creating clonal and subclonal binary matrixes ----
-binary_mats <- readRDS("./DATA/PROCESSED_DATA/001_oncokb_binary_matrixes.RDS")
-maf_for_models <- read.delim("./DATA/PROCESSED_DATA/p_clonal-MAF_filt-for-model.tsv",
-                             sep="\t", header=T)
-model_mafs <- split(maf_for_models,maf_for_models$clonality)
-
-new_clonality_mats <- lapply(seq_along(binary_mats),function(mat_index){
-  mat <- binary_mats[[mat_index]]
-  tiss <- names(binary_mats)[mat_index]
-  original_columns <- colnames(mat)
-  genes <- str_replace(names(mat)[grep("mutation",names(mat))],"_mutation","")
-  new_model_bms <- lapply(seq_along(model_mafs),function(maf_index){
-    maf <- model_mafs[[maf_index]]
-    cl_name <- names(model_mafs)[[maf_index]]
-    ### ... Retrieving clonal / subclonal variants from maf 
-    maf <- filter(maf,CANC_TYPE==tiss)[c("Tumor_Sample_Barcode","Hugo_Symbol")]
-    names(maf) <- c("SAMPLE_ID","Gene")
-    maf$mutation <- 1
-    ### ... Saving old binary matrix
-    old_bm <- mat
-    ### ... Keeping only mutation columns (gain/Loss columns will stay the same)
-    old_bm_mut <- mat[grep("mutation",names(mat))]
-    ### ... Creating new clonal / subclonal columns
-    new_bm_mut <- pivot_wider(maf,
-                              values_from=mutation,
-                              names_from=Gene,
-                              values_fill=0,
-                              names_glue="{Gene}_mutation")
-    ### ... Eliminating from old mutation columns those that have been created
-    old_bm_mut[intersect(names(new_bm_mut),names(old_bm_mut))] <- NULL
-    ### ... Merging mutation information 
-    newbm <- merge(old_bm_mut,new_bm_mut,by.x="row.names",by.y="SAMPLE_ID",all.x=T)
-    ### ... Eliminating mutation columns from binary matrix
-    old_bm[grep("mutation",names(old_bm))] <- NULL
-    ### ... Adding new clonal / subclonal columns to binary matrix
-    newmat <- merge(old_bm,newbm,by.x="row.names",by.y="Row.names")
-    ### ... Saving SAMPLE_ID as rownames
-    rownames(newmat) <- newmat$Row.names
-    newmat$Row.names <- NULL
-    newmat[is.na(newmat)] <- 0
-    ### ... Sorting colums to leave them as before
-    newmat <- newmat[original_columns]
-    ### ... Checking how many alterations per gene_alter
-    col_sums <- colSums(newmat)
-    group_names <- sub("^(.*?)_.*$", "\\1", names(col_sums))
-    ### ... Checking how many alterations per gene
-    grouped_vector <- tapply(col_sums, group_names, sum)
-    any(grouped_vector==0)
-    ### ... Checking how many alterations per sample
-    no_alter_patients <- data.frame(SAMPLE_ID=row.names(newmat),
-                                    N=rowSums(newmat))
-    names(no_alter_patients) <- c("SAMPLE_ID",paste0("N_",tolower(cl_name),".Variants"))
-    return(list(cl_name=newmat,no_alter_patients=no_alter_patients))
-  })
-  no_alter_patients <- lapply(new_model_bms,function(x){return(x[[2]])})
-  new_model_bms <- lapply(new_model_bms,function(x){return(x[[1]])})
-  return(list(bms=new_model_bms,no_altered_patients=no_alter_patients))
-})
-names(new_clonality_mats) <- names(binary_mats)
-clonal_binary_matrixes<- lapply(new_clonality_mats,function(x){return(x[[1]])})
-no_altered_patients <- lapply(new_clonality_mats,function(x){return(x[[2]])})
-no_altered_patients <- lapply(no_altered_patients,function(x){return(merge(x[[1]],x[[2]]))})
-no_altered_patients <- bind_rows(no_altered_patients)
-saveRDS(clonal_binary_matrixes,"./DATA/PROCESSED_DATA/clonality_binary_matrixes.RDS")
 
 
 

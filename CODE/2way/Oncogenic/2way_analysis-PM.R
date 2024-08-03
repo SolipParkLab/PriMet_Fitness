@@ -14,15 +14,10 @@ library(ggplot2)
 
 
 ### ... Input files ----
-total <- read.delim('./DATA/ANALYSIS_DATA/2way/2way_PERM_analysis_mf1-cf10_Tissue-Stage-PM.tsv', sep = '\t')
-clonal_functional_clinical_maf <- read.delim("./DATA/PROCESSED_DATA/p_clonal-MAF.tsv", sep="\t", header=T)
-# Changing metastatic biopsy ---- 
-clonal_functional_clinical_maf$Location_plot <- ifelse(clonal_functional_clinical_maf$BIOPSY_LOCATION=="Unspecified"|clonal_functional_clinical_maf$BIOPSY_LOCATION=="Unknown primary"|clonal_functional_clinical_maf$BIOPSY_LOCATION=="Other",
-                                                       "Unknown",
-                                                       clonal_functional_clinical_maf$BIOPSY_LOCATION)
-clonal_functional_clinical_maf$Location_plot <- ifelse(clonal_functional_clinical_maf$Location_plot=="Lypmh",
-                                                       "Lymph",
-                                                       clonal_functional_clinical_maf$Location_plot)
+# Results file with fdr applied (see fdr-class.R script).
+total <- read.delim(sprintf('./DATA/ANALYSIS_DATA/2way/2way_PERM_analysis_%s_%s.tsv', sep = '\t', FREQ, SPLITMOD))
+# Maf with clonality, obtained with the preprocessing script.
+clonal_functional_clinical_maf <- read.delim("./DATA/PROCESSED_DATA/p-clonal-functional-clinical-maf.tsv", sep="\t", header=T)
 
 
 
@@ -34,7 +29,7 @@ setwd('./DATA/ANALYSIS_DATA/2way__OG')
 ###############################################################################
 # Class perturbation across stages
 FDR_2way <- "10"
-total_significants <- total[c("Gene","Stage","Estimate","Std_Error","z_value","P_value","Null_deviance","Residual_deviance",
+total_significants <- total[c("Gene","Stage","Std_Error","z_value","P_value","Null_deviance","Residual_deviance",
                               "NoMutWT","MutWT","NoMutCNV","MutCNV","MutFreq","LossFreq","GainFreq","Size","Function",
                               "Tissue","Subtype","CNA_type","NTT_Tissue","NTT_Subtype","NTT_Tissue.Stage","NTT_Subtype.Stage",
                               "Log_Pval_max10","Adj_Pval_PERM",paste0("SIG_FDR",FDR_2way),paste0("Class_FDR",FDR_2way),paste0("C4_FDR",FDR_2way),

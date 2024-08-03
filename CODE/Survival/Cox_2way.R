@@ -12,11 +12,6 @@ library(survminer)
 clinical <- filter(read.delim('./DATA/PROCESSED_DATA/p_clinical_data_2way-classification.tsv'), N_ONCOGENIC_ALTERATIONS > 0)
 # Removing columns we don't need
 clinical_red <- filter(clinical, os_days < 365.25 * 5)
-clinical_red[c('PATIENT_ID', 'MET_COUNT', 'PRIM_SITE', 'MET_SITE', 'IS_DIST_MET_MAPPED', 'TUMOR_PURITY', 'SAMPLE_COVERAGE',
-               'YEARS_BTW_METAS', 'DIAGNOSES', 'N_ONCOGENIC_ALTERATIONS', 'N_clonal.Variants', 'N_subclonal.Variants', 'BIOPSY_LOCATION',
-               'TREATMENT', 'met_count', 'met_site_count', 'surgical_procedure_age', 'evidence_of_mets_age', 'seq_report_age',
-               'death_age', 'last_contact_age', 'death_or_last_contact_age', 'AGE_AT_EVIDENCE_OF_METS',
-               'AGE_AT_DEATH', 'AGE_AT_SURGERY', 'AGE_AT_LAST_CONTACT', 'STAGE_PWOWM')] <- NULL
 clinical_long <- pivot_longer(clinical_red,
                               cols = colnames(clinical_red)[!colnames(clinical_red) %in% c('SAMPLE_ID', 'CANC_TYPE', 'CANC_SUBTYPE', 'STAGE_PM',
                                                                                            'sex', 'AGE_AT_SEQUENCING', 'os_days', 'os_status')],
@@ -73,10 +68,10 @@ pvals_2v2_together$Parameter <- str_replace_all(pvals_2v2_together$Parameter, c(
 if (!file.exists('./DATA/ANALYSIS_DATA/Survival')){
   dir.create('./DATA/ANALYSIS_DATA/Survival')
 }
-if (!file.exists('./DATA/ANALYSIS_DATA/Survival/2w')){
-  dir.create('./DATA/ANALYSIS_DATA/Survival/2w')
+if (!file.exists('./DATA/ANALYSIS_DATA/Survival/2way')){
+  dir.create('./DATA/ANALYSIS_DATA/Survival/2way')
 }
-setwd('./DATA/ANALYSIS_DATA/Survival/2w')
-saveRDS(input_2way, './INPUT_2WAY.RDS')
-write.table(pvals_2v2_together, './OS_2W.tsv',
+setwd('./DATA/ANALYSIS_DATA/Survival/2way')
+saveRDS(input_2way, './INPUT_2way.RDS')
+write.table(pvals_2v2_together, './OS_2way.tsv',
             sep = '\t', row.names = F, quote = F)

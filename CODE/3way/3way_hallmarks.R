@@ -16,10 +16,13 @@ thr <- 10
 
 
 ### ... Load files ----
-input_genes <- read.delim('./DATA/PROCESSED_DATA/492_input_genes.tsv', check.names = F) # Genes in the maf file
+# Genes in the maf file
+input_genes <- read.delim('./DATA/492_input_genes.tsv', check.names = F)
 input_genes <- as.character(input_genes[,1])
-hallmarks <- read.table('./DATA/PROCESSED_DATA/CELL_CPTAC_Hallmark.txt',
+# CPTAC hallmarks data
+hallmarks <- read.table('./DATA/CELL_CPTAC_Hallmark.txt',
                         sep = '\t', na.strings = '', header = T)
+# 3-way results
 results <- filter(readRDS(sprintf('./DATA/ANALYSIS_DATA/3way/3way_%s_analysis_%s_%s_FDR%s.RDS', FDR, FREQ, SPLITMOD, thr)),
                   SIG_FDR10_3way == T)
 
@@ -134,7 +137,7 @@ perm <- function(times, n_sig_pairs){
 
 ### ... Compute and join the permutation output in a single table ----
 # Primary
-set.seed(33) # NANOSEED
+set.seed(33)
 perm_table_prim <- perm(N, n_sig_pairs_prim) %>% 
   reduce(full_join, by = 'Hallmark')
 row.names(perm_table_prim) <- perm_table_prim$Hallmark

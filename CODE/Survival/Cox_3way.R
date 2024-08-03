@@ -13,18 +13,13 @@ library(survminer)
 # Clinical data
 clinical <- filter(read.delim('./DATA/PROCESSED_DATA/p_clinical_data_2genes-classification.tsv', check.names = F), N_ONCOGENIC_ALTERATIONS > 0)
 # Twogenes results
-twogenes <- filter(readRDS('./DATA/ANALYSIS_DATA/3WAY/3wTG_PERM_analysis_mf1-cf10_Tissue-Stage-PM_FDR10.RDS'),
+twogenes <- filter(readRDS('./DATA/ANALYSIS_DATA/3way/3way_PERM_analysis_mf1-cf10_Tissue-Stage-PM_FDR10.RDS'),
                    SIG_FDR10_3way == F)
 
 
 
 ### ... Processing clinical data ----
 clinical_red <- filter(clinical, os_days < 365.25 * 5)
-clinical_red[c('PATIENT_ID', 'MET_COUNT', 'PRIM_SITE', 'MET_SITE', 'IS_DIST_MET_MAPPED', 'TUMOR_PURITY', 'SAMPLE_COVERAGE',
-               'YEARS_BTW_METAS', 'DIAGNOSES', 'N_ONCOGENIC_ALTERATIONS', 'N_clonal.Variants', 'N_subclonal.Variants', 'BIOPSY_LOCATION',
-               'TREATMENT', 'met_count', 'met_site_count', 'surgical_procedure_age', 'evidence_of_mets_age', 'seq_report_age',
-               'death_age', 'last_contact_age', 'death_or_last_contact_age', 'AGE_AT_EVIDENCE_OF_METS',
-               'AGE_AT_DEATH', 'AGE_AT_SURGERY', 'AGE_AT_LAST_CONTACT', 'STAGE_PWOWM')] <- NULL
 clinical_long <- pivot_longer(clinical_red,
                               cols = colnames(clinical_red)[!colnames(clinical_red) %in% c('SAMPLE_ID', 'CANC_TYPE', 'CANC_SUBTYPE', 'STAGE_PM',
                                                                                            'sex', 'AGE_AT_SEQUENCING', 'os_days', 'os_status')],
@@ -101,18 +96,18 @@ walds_pvals_3w$Parameter <- str_replace_all(walds_pvals_3w$Parameter, c('sex' = 
 if (!file.exists('./DATA/ANALYSIS_DATA/Survival')){
   dir.create('./DATA/ANALYSIS_DATA/Survival')
 }
-if (!file.exists('./DATA/ANALYSIS_DATA/Survival/3w')){
-  dir.create('./DATA/ANALYSIS_DATA/Survival/3w')
+if (!file.exists('./DATA/ANALYSIS_DATA/Survival/3way')){
+  dir.create('./DATA/ANALYSIS_DATA/Survival/3way')
 }
-setwd('./DATA/ANALYSIS_DATA/Survival/3w')
-write.table(walds_pvals_3w, './OS_3w-sig.tsv',
+setwd('./DATA/ANALYSIS_DATA/Survival/3way')
+write.table(walds_pvals_3w, './OS_3way.tsv',
             sep = '\t', row.names = F, quote = F)
 
 
 
 ### ... If we want to compare 2way vs 2wayMutB and 2wayNoMutB ----
 # FIRST, we have to create input_2w in the OS_2way.R script previously
-input_2way <- readRDS('../2w/INPUT_2WAY.RDS')
+input_2way <- readRDS('../2way/INPUT_2way.RDS')
 input_2way <- filter(input_2way, Significant == 'sig')
 input_combined <- merge(clinical_long,
                         input_2way[c('SAMPLE_ID', 'CANC_TYPE', 'STAGE_PM', 'CNA_type', 'Gene', 'Class')],
@@ -153,5 +148,5 @@ walds_pvals_BOTH <- lapply(unique(input_combined$Pair), function(pair){
 walds_pvals_BOTH <- bind_rows(walds_pvals_BOTH)
 walds_pvals_BOTH$Parameter <- str_replace_all(walds_pvals_BOTH$Parameter, c('sex' = '', 'Class' = '', 'CANC_SUBTYPE' = ''))
 ### ... Saving file ----
-write.table(walds_pvals_BOTH, './OS_3w_control-2way.tsv',
+write.table(walds_pvals_BOTH, './OS_3way_control-2way.tsv',
             sep = '\t', row.names = F, quote = F)
