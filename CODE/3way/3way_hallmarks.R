@@ -11,7 +11,7 @@ source("./CODE/common_reg-model-functions.R",local=T)
 FDR <- 'PERM'
 FREQ <- 'mf1-cf10'
 SPLITMOD <- 'Tissue-Stage-PM'
-thr <- 10
+FDR_thr <- 10
 
 
 
@@ -23,7 +23,7 @@ input_genes <- as.character(input_genes[,1])
 hallmarks <- read.table('./DATA/CELL_CPTAC_Hallmark.txt',
                         sep = '\t', na.strings = '', header = T)
 # 3-way results
-results <- filter(readRDS(sprintf('./DATA/ANALYSIS_DATA/3way/3way_%s_analysis_%s_%s_FDR%s.RDS', FDR, FREQ, SPLITMOD, thr)),
+results <- filter(readRDS(sprintf('./DATA/ANALYSIS_DATA/3way/3way_%s_analysis_%s_%s_FDR%s.RDS', FDR, FREQ, SPLITMOD, FDR_thr)),
                   SIG_FDR10_3way == T)
 
 

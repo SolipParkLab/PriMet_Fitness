@@ -26,7 +26,7 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 
 ### ... Loading glm inputs ----
-model_inputs <- readRDS(sprintf("./DATA/GLM_INPUTS/2way_Treatment/2way_Treatment__glm-inputs_%s_%s.RDS",FREQ,SPLITMOD))
+model_inputs <- readRDS(sprintf("./DATA/GLM_INPUTS/2way_Treatment/2way_Treatment_glm-inputs_%s_%s.RDS",FREQ,SPLITMOD))
 
 
 
@@ -71,9 +71,9 @@ if (!file.exists('./DATA/GLM_OUTPUTS/2way_Treatment')){
   dir.create('./DATA/GLM_OUTPUTS/2way_Treatment')
 }
 setwd('./DATA/GLM_OUTPUTS/2way_Treatment')
-saveRDS(model_results_df,sprintf("2way_Treatment__glm-outputs_%s_%s.RDS",FREQ,SPLITMOD))
+saveRDS(model_results_df,sprintf("2way_Treatment_glm-outputs_%s_%s.RDS",FREQ,SPLITMOD))
 write.table(model_results_df,
-            sprintf("2way_Treatment__glm-outputs_%s_%s.tsv",FREQ,SPLITMOD),
+            sprintf("2way_Treatment_glm-outputs_%s_%s.tsv",FREQ,SPLITMOD),
             sep="\t",
             quote=FALSE,
             row.names = FALSE)

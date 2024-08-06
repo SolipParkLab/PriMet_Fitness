@@ -35,7 +35,7 @@ source("./CODE/common_reg-model-functions.R",local=T)
 # Permuted matrices
 permuted_matrixes <- readRDS(sprintf("./DATA/PROCESSED_DATA/PERMUTED_matrixes_%s.RDS",SPLITMOD))
 # Glm_outputs from 3-way
-real_results_twogenes <- readRDS(sprintf("./DATA/ANALYSIS_DATA/3way/3way__glm-outputs_%s_%s.RDS", FREQ, SPLITMOD))
+real_results_twogenes <- readRDS(sprintf("./DATA/GLM_OUTPUTS/3way/3way_glm-outputs_%s_%s.RDS", FREQ, SPLITMOD))
 
 
 ### ... Creating function to generate two-genes binary matrix ONLY FOR SIGNIFICANT 2WAY GENES ----
@@ -242,7 +242,7 @@ p_val_significant_twogenes_counts_list <- read.delim(sprintf("./DATA/ANALYSIS_DA
 
 
 ## Counting real model significants ----
-real_results_twogenes <- readRDS(sprintf("./DATA/ANALYSIS_DATA/3way/3way__glm-outputs_%s_%s.RDS", FREQ, SPLITMOD))
+real_results_twogenes <- readRDS(sprintf("./DATA/GLM_OUTPUTS/3way/3way_glm-outputs_%s_%s.RDS", FREQ, SPLITMOD))
 tofill_counts_df <- expand.grid(Tissue=c("Breast","Core-GI","Developmental-GI-Tract","Endocrine","Genitourinary","Gynecologic","Head-and-Neck","Skin","Soft-Tissue","Thoracic"),
                                 CNA_type=c("Loss","Gain"),
                                 Stage=c("Primary","Metastasis"))

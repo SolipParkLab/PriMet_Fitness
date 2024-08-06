@@ -174,7 +174,7 @@ pseudo_oncogenic_retrieve_results <- function(df) {
 # args <- c("1") # I think this is for a test
 ### ... Running 2way regression model ----
 ###### IF WE ARE RUNNING ONLY IN TESTED REAL PAIRS
-real_results <- read.delim(sprintf("./DATA/ANALYSIS_DATA/2way_Treatment/2way_Treatment_PERM_analysis_%s_%s.tsv",FREQ,SPLITMOD),
+real_results <- read.delim(sprintf("./DATA/GLM_OUTPUTS/2way_Treatment/2way_Treatment_glm-outputs_%s_%s.RDS",FREQ,SPLITMOD),
                            sep="\t", header=T)
 if(grepl("Tissue",SPLITMOD)){
   real_results$model <- paste0(real_results$Tissue,".NA.",real_results$Stage,".",real_results$Treatment)

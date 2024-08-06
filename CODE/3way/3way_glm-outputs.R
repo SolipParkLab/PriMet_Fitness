@@ -34,7 +34,7 @@ sig_genes_2way <- read.csv(sprintf("./DATA/ANALYSIS_DATA/2way/2way_%s_analysis_%
                            sep="\t", header=T)
 sig_genes_2way <- filter(sig_genes_2way,get(paste0("SIG_FDR", FDR_2way))==T)
 # Glm inputs
-inputs_twogenes <- readRDS(sprintf('./DATA/GLM_INPUTS/3way/3way__glm-inputs_%s_%s.RDS', FREQ, SPLITMOD))
+inputs_twogenes <- readRDS(sprintf('./DATA/GLM_INPUTS/3way/3way_glm-inputs_%s_%s.RDS', FREQ, SPLITMOD))
 
 
 
@@ -104,4 +104,4 @@ if (!file.exists('./DATA/GLM_OUTPUTS/3way')){
   dir.create('./DATA/GLM_OUTPUTS/3way')
 }
 setwd('./DATA/GLM_OUTPUTS/3way')
-saveRDS(twogenes_outputs, sprintf('./3way__glm-outputs_%s_%s.RDS', FREQ, SPLITMOD))
+saveRDS(twogenes_outputs, sprintf('./3way_glm-outputs_%s_%s.RDS', FREQ, SPLITMOD))

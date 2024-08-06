@@ -32,7 +32,7 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 ### ... Loading files ----
 # Glm outputs
-results_twogenes <- readRDS(sprintf('./DATA/MODEL_OUTPUTS/3way/3way__glm-outputs_%s_%s.RDS', FREQ, SPLITMOD))
+results_twogenes <- readRDS(sprintf('./DATA/MODEL_OUTPUTS/3way/3way_glm-outputs_%s_%s.RDS', FREQ, SPLITMOD))
 # FDR table obtained from permutations
 FDR_conversion_table <- read.delim(sprintf("./DATA/ANALYSIS_DATA/3way/3way_FDR-conversion-table_%s_%s.tsv",FREQ,SPLITMOD),
                                    sep="\t", header=T)
