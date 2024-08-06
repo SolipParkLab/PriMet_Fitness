@@ -31,7 +31,7 @@ source("./CODE/common_reg-model-functions.R",local=T)
 
 ### ... Loading files ----
 # Glm outputs
-model_results_df <- readRDS(sprintf("./DATA/GLM_OUTPUTS/2way_Treatment/2way_Treatment__glm-outputs_%s_%s.RDS", FREQ, SPLITMOD))
+model_results_df <- readRDS(sprintf("./DATA/GLM_OUTPUTS/2way_Treatment/2way_Treatment_glm-outputs_%s_%s.RDS", FREQ, SPLITMOD))
 # Cancer gene list with gene function in tumors
 cancgenedf <- read.csv("./DATA/PROCESSED_DATA/p_cancer-gene-list.tsv", 
                        sep = "\t", header = TRUE, stringsAsFactors = FALSE)
