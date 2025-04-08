@@ -9,6 +9,7 @@ Files that are necessary to run the scripts are described here. Some of them wer
 * The binary matrix (**Binary_Matrix.tsv**) was created in the preprocessing script and merged to clinical data. Confounding factor levels (HIGH or LOW) were assigned using the median.
 * **492_input_genes.tsv** is the list of genes in the maf file.
 * **p_cancer-gene-list.tsv** includes a list of cancer genes and their function as tumor drivers (oncogene, tumor supressor or both). Can be downloaded from [oncoKB](https://www.oncokb.org/cancer-genes).
+* **p_gene-names_conversion_table.tsv** includes a list of genes from the maf file that don't have the current HUGO symbol. This table also provides the current HUGO symbols.
 * **clonality_results.tsv** has sample clonality information, obtained from the functional clonal maf (created in the preprocessing script).
 * **Surv-clinical-data.tsv** has information used to create the sample classification based on 2-way and 3-way pairs for Cox regression models.
 

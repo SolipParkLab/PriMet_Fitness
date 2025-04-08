@@ -82,4 +82,4 @@ names(input_files) <- inputnames
 
 
 ### ... Saving files ----
-saveRDS(input_files, sprintf('./3way__glm-inputs_%s_%s.RDS', FREQ, SPLITMOD))
+saveRDS(input_files, sprintf('./3way_glm-inputs_%s_%s.RDS', FREQ, SPLITMOD))

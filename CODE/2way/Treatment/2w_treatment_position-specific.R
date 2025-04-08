@@ -134,12 +134,12 @@ model_inputs_subset <- lapply(ready_bm_subset, pos_specific_inputs, freqmut_thre
 model_inputs_df_subset <- map_df(model_inputs_subset, ~as.data.frame(.x), .id="id")
 model_inputs_df_subset[c("Tissue","Subtype","Stage","Treatment")] <- str_split_fixed(model_inputs_df_subset$id,"\\.",4)
 model_inputs_df_subset$id <- NULL
-saveRDS(model_inputs_subset, sprintf('./DATA/GLM_INPUTS/2way_Treatment/2way_Treatment__glm-inputs_Pos-Specific_%s_%s.RDS', 'mf05-cf10', 'Tissue-Stage-PM'))
+saveRDS(model_inputs_subset, sprintf('./DATA/GLM_INPUTS/2way_Treatment/2way_Treatment_glm-inputs_Pos-Specific_%s_%s.RDS', 'mf05-cf10', 'Tissue-Stage-PM'))
 
 
 
 ### ... Computing outputs ----
-model_inputs <- readRDS(sprintf('./DATA/GLM_INPUTS/2way_Treatment/2way_Treatment__glm-inputs_Pos-Specific_%s_%s.RDS', 'mf05-cf10', 'Tissue-Stage-PM'))
+model_inputs <- readRDS(sprintf('./DATA/GLM_INPUTS/2way_Treatment/2way_Treatment_glm-inputs_Pos-Specific_%s_%s.RDS', 'mf05-cf10', 'Tissue-Stage-PM'))
 # Function to create result table for the 2way model 
 pos_specific_results <- function(df) {
   if(is.null(df)){return(NULL)}
@@ -187,8 +187,8 @@ model_results_df <- merge(model_results_df,
                           model_inputs_df_subset[c("Gene", "Alteration","Tissue","Subtype","Stage","Treatment","MutFreq","LossFreq","GainFreq","Size")],
                           by = intersect(names(model_results_df),
                                          c("Gene", "Alteration", "Tissue","Subtype","Stage","Treatment","MutFreq","LossFreq","GainFreq")))
-saveRDS(model_results_df, sprintf('./DATA/GLM_OUTPUTS/2way_Treatment/2way_Treatment__glm-outputs_Pos-Specific_%s_%s.RDS', 'mf05-cf10', 'Tissue-Stage-PM'))
-write.table(model_results_df, sprintf('./DATA/GLM_OUTPUTS/2way_Treatment/2way_Treatment__glm-outputs_Pos-Specific_%s_%s.tsv', 'mf05-cf10', 'Tissue-Stage-PM'),
+saveRDS(model_results_df, sprintf('./DATA/GLM_OUTPUTS/2way_Treatment/2way_Treatment_glm-outputs_Pos-Specific_%s_%s.RDS', 'mf05-cf10', 'Tissue-Stage-PM'))
+write.table(model_results_df, sprintf('./DATA/GLM_OUTPUTS/2way_Treatment/2way_Treatment_glm-outputs_Pos-Specific_%s_%s.tsv', 'mf05-cf10', 'Tissue-Stage-PM'),
             sep = '\t', row.names = F, quote = F)
 
 

@@ -162,7 +162,7 @@ pseudo_oncogenic_retrieve_results <- function(df) {
 
 
 ### ... Running 2way regression model ----
-real_results <- read.delim(sprintf("./DATA/ANALYSIS_DATA/2way/2way_PERM_analysis_%s_%s.tsv", FREQ, SPLITMOD),
+real_results <- read.delim(sprintf("./DATA/GLM_OUTPUTS/2way/2way_glm-outputs_%s_%s.RDS", FREQ, SPLITMOD),
                            sep="\t", header=T)
 if(grepl("Tissue",SPLITMOD)){
   real_results$model <- paste0(real_results$Tissue,".NA.",real_results$Stage)
@@ -199,7 +199,7 @@ saveRDS(permuted_outputs,
 ### 3. COUNTING REAL SIGNIFICANTS #####
 subtypes <- setNames(unique(binary_matrix[c("CANC_TYPE","CANC_SUBTYPE")]),
                      c("Tissue","Subtype"))
-real_results <- read.delim(sprintf("./DATA/ANALYSIS_DATA/2way/2way_PERM_analysis_%s_%s.tsv", FREQ, SPLITMOD),
+real_results <- read.delim(sprintf("./DATA/GLM_OUTPUTS/2way/2way_glm-outputs_%s_%s.RDS", FREQ, SPLITMOD),
                            sep="\t", header=T)
 if(grepl("Tissue",SPLITMOD)){
   if(grepl("PM",SPLITMOD)){
